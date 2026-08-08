@@ -166,6 +166,20 @@ const Extensions = {
       .order('sort_order');
     if (error) throw error;
     return data;
+  },
+  async create(sectorId, fields) {
+    const { data, error } = await db.from('extensions').insert({ sector_id: sectorId, ...fields }).select().single();
+    if (error) throw error;
+    return data;
+  },
+  async update(id, fields) {
+    const { data, error } = await db.from('extensions').update(fields).eq('id', id).select().single();
+    if (error) throw error;
+    return data;
+  },
+  async remove(id) {
+    const { error } = await db.from('extensions').delete().eq('id', id);
+    if (error) throw error;
   }
 };
 
@@ -179,6 +193,20 @@ const Documents = {
       .order('sort_order');
     if (error) throw error;
     return data;
+  },
+  async create(sectorId, fields) {
+    const { data, error } = await db.from('documents').insert({ sector_id: sectorId, ...fields }).select().single();
+    if (error) throw error;
+    return data;
+  },
+  async update(id, fields) {
+    const { data, error } = await db.from('documents').update(fields).eq('id', id).select().single();
+    if (error) throw error;
+    return data;
+  },
+  async remove(id) {
+    const { error } = await db.from('documents').delete().eq('id', id);
+    if (error) throw error;
   }
 };
 
@@ -192,5 +220,19 @@ const FAQs = {
       .order('sort_order');
     if (error) throw error;
     return data;
+  },
+  async create(sectorId, fields) {
+    const { data, error } = await db.from('faqs').insert({ sector_id: sectorId, ...fields }).select().single();
+    if (error) throw error;
+    return data;
+  },
+  async update(id, fields) {
+    const { data, error } = await db.from('faqs').update(fields).eq('id', id).select().single();
+    if (error) throw error;
+    return data;
+  },
+  async remove(id) {
+    const { error } = await db.from('faqs').delete().eq('id', id);
+    if (error) throw error;
   }
 };
