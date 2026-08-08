@@ -1,6 +1,6 @@
 /* ===================================================
    Portal HPS — Identidade Visual Hapvida
-   Cores: Azul #1539AA | Branco #FFFFFF | Laranja #FF8800
+   Cores: Azul #1D71B8 | Laranja #F26522 | Vermelho #D62525
    Tipografia: Source Sans 3 (substituta da Pitanga)
 =================================================== */
 
@@ -10,15 +10,15 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --azul:        #1539AA;
-  --azul-escuro: #0D2580;
-  --azul-medio:  #1E4FC7;
-  --azul-claro:  #E8EFFF;
-  --azul-hover:  #0F2C8F;
+  --azul:        #1D71B8;
+  --azul-escuro: #0D5491;
+  --azul-medio:  #2589D6;
+  --azul-claro:  #E3F0FA;
+  --azul-hover:  #155490;
   --branco:      #FFFFFF;
-  --laranja:     #FF8800;
-  --laranja-claro: #FFF3E0;
-  --amarelo:     #FFCC23;
+  --laranja:     #F26522;
+  --laranja-claro: #FEF0E7;
+  --amarelo:     #F5C206;
   --cinza-fundo: #F4F6FB;
   --cinza-borda: #DDE3F0;
   --cinza-texto: #4A5568;
