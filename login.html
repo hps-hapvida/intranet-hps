@@ -159,8 +159,10 @@
     const errorEl    = document.getElementById('login-error');
 
     async function doLogin() {
-      const email    = emailEl.value.trim();
+      let email      = emailEl.value.trim();
       const password = passEl.value;
+      // Suporte a login simplificado: "admin" → "admin@intranet.hps"
+      if (email && !email.includes('@')) email = email + '@intranet.hps';
       if (!email || !password) return;
 
       btnEl.disabled = true;

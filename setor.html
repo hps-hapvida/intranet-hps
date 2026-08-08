@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231D71B8'/><text y='24' x='4' font-size='22' font-family='Arial'>🏥</text></svg>">
   <style>
-    /* Admin controls em itens de lista */
     .link-item { display: flex; align-items: center; }
     .link-item a { flex: 1; min-width: 0; }
     .item-admin-btns {
@@ -20,9 +19,8 @@
       padding: 3px 5px; border-radius: 4px; font-size: 13px;
       line-height: 1; transition: background .15s;
     }
-    .item-admin-btns button:hover { background: var(--cinza-fundo, #f3f4f6); }
+    .item-admin-btns button:hover { background: var(--cinza-fundo,#f3f4f6); }
 
-    /* Admin controls em FAQs */
     .faq-item { position: relative; }
     .faq-admin-btns {
       position: absolute; top: 10px; right: 12px;
@@ -32,34 +30,33 @@
     .faq-item:hover .faq-admin-btns { opacity: 1; }
     .faq-admin-btns button {
       background: none; border: none; cursor: pointer;
-      padding: 3px 6px; border-radius: 4px; font-size: 13px;
-      line-height: 1;
+      padding: 3px 6px; border-radius: 4px; font-size: 13px; line-height: 1;
     }
-    .faq-admin-btns button:hover { background: var(--cinza-fundo, #f3f4f6); }
+    .faq-admin-btns button:hover { background: var(--cinza-fundo,#f3f4f6); }
 
-    /* Botão pequeno de adicionar em cabeçalhos */
     .btn-add-sm {
       font-size: 12px; font-weight: 600; padding: 4px 10px;
-      background: var(--azul, #1D71B8); color: #fff;
-      border: none; border-radius: 6px; cursor: pointer;
-      white-space: nowrap; flex-shrink: 0;
+      background: var(--azul,#1D71B8); color: #fff;
+      border: none; border-radius: 6px; cursor: pointer; white-space: nowrap; flex-shrink: 0;
     }
     .btn-add-sm:hover { opacity: .85; }
-    .card-header-row {
-      display: flex; align-items: center;
-      justify-content: space-between; width: 100%;
-    }
+    .card-header-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 
-    /* Estado vazio com botão de adicionar */
-    .empty-admin {
-      padding: 16px; text-align: center;
-      color: var(--cinza-texto, #6b7280); font-size: 13px;
+    .empty-admin { padding: 16px; text-align: center; color: var(--cinza-texto,#6b7280); font-size: 13px; }
+
+    /* App destaque edit btn */
+    .app-destaque-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .btn-edit-app-link {
+      font-size: 12px; font-weight: 600; padding: 5px 12px;
+      background: rgba(255,255,255,.2); color: #fff;
+      border: 1px solid rgba(255,255,255,.4); border-radius: 6px;
+      cursor: pointer; white-space: nowrap;
     }
+    .btn-edit-app-link:hover { background: rgba(255,255,255,.3); }
   </style>
 </head>
 <body>
 
-  <!-- ===== HEADER ===== -->
   <header class="site-header">
     <div class="header-inner">
       <a href="index.html" class="header-logo">
@@ -72,12 +69,11 @@
       </a>
       <nav class="header-nav">
         <a href="index.html">← Setores</a>
-        <span id="hps-live-badge" class="live-badge" style="display:none" title="Conectado — atualizações em tempo real">● Ao vivo</span>
+        <span id="hps-live-badge" class="live-badge" style="display:none" title="Atualizações em tempo real">● Ao vivo</span>
       </nav>
     </div>
   </header>
 
-  <!-- ===== BREADCRUMB ===== -->
   <div class="breadcrumb-bar">
     <nav class="breadcrumb">
       <a href="index.html">Início</a>
@@ -86,18 +82,16 @@
     </nav>
   </div>
 
-  <!-- ===== HERO ===== -->
-  <section class="hero" style="padding: 36px 24px;" id="sector-hero" style="display:none">
-    <div class="hero-inner" style="display:flex; align-items:center; gap:20px;">
-      <div id="sector-emoji" style="font-size:52px; flex-shrink:0;"></div>
+  <section class="hero" style="padding:36px 24px;" id="sector-hero" style="display:none">
+    <div class="hero-inner" style="display:flex;align-items:center;gap:20px;">
+      <div id="sector-emoji" style="font-size:52px;flex-shrink:0;"></div>
       <div>
-        <h1 id="sector-name" style="font-size: clamp(20px,3vw,30px);"></h1>
+        <h1 id="sector-name" style="font-size:clamp(20px,3vw,30px);"></h1>
         <p id="sector-desc" style="margin:0;"></p>
       </div>
     </div>
   </section>
 
-  <!-- ===== MAIN ===== -->
   <main class="main-container">
 
     <!-- App Destaque -->
@@ -106,27 +100,28 @@
       <div class="app-destaque-info">
         <h3 id="featured-app-name"></h3>
         <p>Clique para acessar o sistema diretamente.</p>
-        <a id="featured-app-link" href="#" target="_blank" class="btn-app">Abrir sistema</a>
+        <div class="app-destaque-actions">
+          <a id="featured-app-link" href="#" target="_blank" class="btn-app">Abrir sistema</a>
+          <button id="btn-edit-app" class="btn-edit-app-link" style="display:none" onclick="openAppEditor()">✏️ Editar link</button>
+        </div>
       </div>
     </div>
 
-    <!-- Layout -->
     <div class="sector-layout">
 
       <!-- Coluna Principal -->
       <div class="sector-main">
 
-        <!-- Avisos -->
         <section>
           <div class="section-header">
             <div class="section-title">
               <div class="icon red">📢</div>
               Avisos &amp; Comunicados
             </div>
-            <button class="btn-primary" id="btn-novo-aviso" style="display:none">+ Novo Aviso</button>
+            <button class="btn-primary" id="btn-novo-aviso" style="display:none" onclick="openPostEditor()">+ Novo Aviso</button>
           </div>
           <div class="card">
-            <div class="card-body" style="padding: 8px 16px;" id="posts-container">
+            <div class="card-body" style="padding:8px 16px;" id="posts-container">
               <div class="loading-state">
                 <div class="loading-spinner"></div>
                 <span>Carregando avisos…</span>
@@ -135,7 +130,6 @@
           </div>
         </section>
 
-        <!-- FAQs -->
         <section id="faqs-section" style="display:none">
           <div class="section-header">
             <div class="section-title">
@@ -149,12 +143,11 @@
           </div>
         </section>
 
-      </div><!-- /sector-main -->
+      </div>
 
       <!-- Coluna Lateral -->
       <div class="sector-side">
 
-        <!-- Links Rápidos -->
         <div class="card" id="links-card" style="display:none">
           <div class="card-header">
             <div class="card-header-row">
@@ -170,23 +163,6 @@
           </div>
         </div>
 
-        <!-- Ramais -->
-        <div class="card" id="extensions-card" style="display:none">
-          <div class="card-header">
-            <div class="card-header-row">
-              <div class="section-title" style="font-size:15px;">
-                <div class="icon orange" style="width:28px;height:28px;font-size:14px;">📞</div>
-                Ramais Importantes
-              </div>
-              <button class="btn-add-sm" id="btn-add-ext" style="display:none" onclick="openExtensionEditor()">+ Novo</button>
-            </div>
-          </div>
-          <div class="card-body" style="padding:8px 16px;">
-            <ul class="link-list" id="extensions-container"></ul>
-          </div>
-        </div>
-
-        <!-- Documentos -->
         <div class="card" id="documents-card" style="display:none">
           <div class="card-header">
             <div class="card-header-row">
@@ -202,11 +178,11 @@
           </div>
         </div>
 
-      </div><!-- /sector-side -->
-    </div><!-- /sector-layout -->
+      </div>
+    </div>
   </main>
 
-  <!-- ===== MODAL de post (leitura) ===== -->
+  <!-- Modal de leitura de post -->
   <div class="modal-overlay" id="post-modal">
     <div class="modal">
       <div class="modal-header">
@@ -219,7 +195,6 @@
     </div>
   </div>
 
-  <!-- ===== FOOTER ===== -->
   <footer class="site-footer">
     <strong id="footer-sector-name">Hospital Paulo Sacramento</strong> · Hapvida NotreDame Intermédica ·
     Intranet HPS — uso exclusivo da equipe ·
@@ -232,32 +207,20 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/admin.js"></script>
   <script>
-  /* ===== Lógica da página de setor ===== */
-
   const MONTHS = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
 
-  let currentSector = null;
-  let currentUser   = null;
+  let currentSector  = null;
+  let currentUser    = null;
   let realtimeChannel = null;
 
-  // Cache local de cada seção
-  let cachedLinks      = [];
-  let cachedExtensions = [];
-  let cachedDocuments  = [];
-  let cachedFaqs       = [];
+  let cachedLinks    = [];
+  let cachedDocuments = [];
+  let cachedFaqs     = [];
 
-  /* ---- Utils ---- */
-  function esc(s) {
-    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-  function escAttr(s) {
-    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-  function isAdminUser() {
-    return !!currentUser && currentUser.app_metadata?.role === 'admin';
-  }
+  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function isAdminUser() { return !!currentUser && currentUser.app_metadata?.role === 'admin'; }
 
-  /* ---- Formatação ---- */
   function formatDate(dateStr) {
     const d = new Date(dateStr + 'T00:00:00');
     return { dia: String(d.getDate()).padStart(2,'0'), mes: MONTHS[d.getMonth()] };
@@ -266,9 +229,7 @@
     return { urgente:'Urgente', aviso:'Aviso', info:'Info', tutorial:'Treinamento' }[tag] || tag;
   }
 
-  /* =========================================================
-     POSTS / AVISOS
-     ========================================================= */
+  /* ===== POSTS ===== */
   function renderPost(post) {
     const { dia, mes } = formatDate(post.post_date);
     const admin = isAdminUser();
@@ -297,9 +258,7 @@
       const posts = await Posts.list(currentSector.id);
       container.innerHTML = posts.length
         ? posts.map(renderPost).join('')
-        : `<div class="empty-state"><p style="color:var(--cinza-texto);text-align:center;padding:24px;">
-            Nenhum aviso publicado ainda.
-           </p></div>`;
+        : `<div class="empty-state"><p style="color:var(--cinza-texto);text-align:center;padding:24px;">Nenhum aviso publicado ainda.</p></div>`;
       initModal();
     } catch(e) {
       container.innerHTML = `<p style="color:var(--vermelho);padding:16px;">Erro ao carregar avisos: ${esc(e.message)}</p>`;
@@ -311,13 +270,11 @@
     const post = posts.find(p => p.id === postId);
     if (post) openPostEditor(post);
   };
-
   window.deletePost = async function(postId) {
     if (!confirm('Excluir este aviso?')) return;
     try { await Posts.remove(postId); await loadPosts(); }
-    catch(e) { alert('Erro ao excluir: ' + e.message); }
+    catch(e) { alert('Erro: ' + e.message); }
   };
-
   window.openPostEditor = function(post = null) {
     const isEdit = !!post;
     const dateStr = post?.post_date || new Date().toISOString().split('T')[0];
@@ -326,8 +283,8 @@
       saveLabel: isEdit ? 'Salvar alterações' : 'Publicar aviso',
       fields: [
         { id:'ef-title',   label:'Título *',  type:'text',     value: post?.title,   placeholder:'Título do aviso' },
-        { id:'ef-summary', label:'Resumo',    type:'textarea', value: post?.summary, placeholder:'Texto curto exibido na lista', rows:2 },
-        { id:'ef-body',    label:'Corpo completo (aceita HTML)', type:'textarea', value: post?.body, rows:5 },
+        { id:'ef-summary', label:'Resumo',    type:'textarea', value: post?.summary, placeholder:'Texto curto', rows:2 },
+        { id:'ef-body',    label:'Corpo (aceita HTML)', type:'textarea', value: post?.body, rows:5 },
         { id:'ef-tag',     label:'Categoria', type:'select',   value: post?.tag || 'aviso',
           options:[{v:'urgente',l:'🔴 Urgente'},{v:'aviso',l:'🔵 Aviso'},{v:'info',l:'⚪ Info'},{v:'tutorial',l:'🟢 Treinamento'}] },
         { id:'ef-date',    label:'Data',      type:'date',     value: dateStr },
@@ -347,16 +304,14 @@
     });
   };
 
-  /* =========================================================
-     LINKS RÁPIDOS
-     ========================================================= */
+  /* ===== LINKS RÁPIDOS ===== */
   async function loadLinks() {
     if (!currentSector) return;
     cachedLinks = await Links.list(currentSector.id);
     const container = document.getElementById('links-container');
-    const card      = document.getElementById('links-card');
+    const card = document.getElementById('links-card');
     if (!container) return;
-    if (cachedLinks.length === 0 && !isAdminUser()) { card.style.display = 'none'; return; }
+    if (cachedLinks.length === 0 && !isAdminUser()) { card.style.display='none'; return; }
     card.style.display = '';
     const admin = isAdminUser();
     container.innerHTML = cachedLinks.length
@@ -373,111 +328,39 @@
       : `<li class="empty-admin">Nenhum link ainda.</li>`;
   }
 
-  window.editLink = function(id) {
-    const l = cachedLinks.find(x => x.id === id);
-    if (l) openLinkEditor(l);
-  };
+  window.editLink = function(id) { const l = cachedLinks.find(x=>x.id===id); if(l) openLinkEditor(l); };
   window.deleteLink = async function(id) {
     if (!confirm('Excluir este link?')) return;
-    try { await Links.remove(id); await loadLinks(); }
-    catch(e) { alert('Erro: ' + e.message); }
+    try { await Links.remove(id); await loadLinks(); } catch(e) { alert('Erro: '+e.message); }
   };
-  window.openLinkEditor = function(link = null) {
+  window.openLinkEditor = function(link=null) {
     const isEdit = !!link;
     openEditor({
-      title: isEdit ? 'Editar Link' : 'Novo Link',
-      saveLabel: isEdit ? 'Salvar' : 'Adicionar',
+      title: isEdit ? 'Editar Link' : 'Novo Link', saveLabel: isEdit ? 'Salvar' : 'Adicionar',
       fields: [
-        { id:'el-label',    label:'Nome *',          type:'text',     value: link?.label,         placeholder:'Ex: Protocolo de Sepse' },
-        { id:'el-url',      label:'URL',             type:'text',     value: link?.url==='#'?'':link?.url, placeholder:'https://...' },
-        { id:'el-icon',     label:'Ícone (emoji)',   type:'text',     value: link?.icon || '🔗',  placeholder:'🔗' },
+        { id:'el-label',    label:'Nome *',        type:'text',     value: link?.label, placeholder:'Nome do link' },
+        { id:'el-url',      label:'URL',           type:'text',     value: link?.url==='#'?'':link?.url, placeholder:'https://...' },
+        { id:'el-icon',     label:'Ícone (emoji)', type:'text',     value: link?.icon||'🔗', placeholder:'🔗' },
         { id:'el-featured', label:'Link destaque (azul)', type:'checkbox', value: link?.is_featured },
-        { id:'el-order',    label:'Ordem',           type:'number',   value: link?.sort_order ?? 0 },
+        { id:'el-order',    label:'Ordem',         type:'number',   value: link?.sort_order??0 },
       ],
       async onSave(v) {
         if (!v['el-label'].trim()) throw new Error('Nome obrigatório');
-        const fields = {
-          label: v['el-label'].trim(), url: v['el-url'].trim() || '#',
-          icon: v['el-icon'].trim() || '🔗', is_featured: v['el-featured'],
-          sort_order: parseInt(v['el-order']) || 0,
-        };
-        if (isEdit) await Links.update(link.id, fields);
-        else        await Links.create(currentSector.id, fields);
+        const fields = { label:v['el-label'].trim(), url:v['el-url'].trim()||'#', icon:v['el-icon'].trim()||'🔗', is_featured:v['el-featured'], sort_order:parseInt(v['el-order'])||0 };
+        if (isEdit) await Links.update(link.id, fields); else await Links.create(currentSector.id, fields);
         await loadLinks();
       }
     });
   };
 
-  /* =========================================================
-     RAMAIS
-     ========================================================= */
-  async function loadExtensions() {
-    if (!currentSector) return;
-    cachedExtensions = await Extensions.list(currentSector.id);
-    const container = document.getElementById('extensions-container');
-    const card      = document.getElementById('extensions-card');
-    if (!container) return;
-    if (cachedExtensions.length === 0 && !isAdminUser()) { card.style.display = 'none'; return; }
-    card.style.display = '';
-    const admin = isAdminUser();
-    container.innerHTML = cachedExtensions.length
-      ? cachedExtensions.map(e => `
-          <li class="link-item">
-            <a href="tel:${escAttr(e.number)}">
-              <span class="link-icon">${esc(e.icon)}</span>${esc(e.label)} — ${esc(e.number)}<span class="link-arrow">→</span>
-            </a>
-            ${admin ? `<div class="item-admin-btns">
-              <button onclick="editExtension('${escAttr(e.id)}')" title="Editar">✏️</button>
-              <button onclick="deleteExtension('${escAttr(e.id)}')" title="Excluir">🗑</button>
-            </div>` : ''}
-          </li>`).join('')
-      : `<li class="empty-admin">Nenhum ramal ainda.</li>`;
-  }
-
-  window.editExtension = function(id) {
-    const e = cachedExtensions.find(x => x.id === id);
-    if (e) openExtensionEditor(e);
-  };
-  window.deleteExtension = async function(id) {
-    if (!confirm('Excluir este ramal?')) return;
-    try { await Extensions.remove(id); await loadExtensions(); }
-    catch(e) { alert('Erro: ' + e.message); }
-  };
-  window.openExtensionEditor = function(ext = null) {
-    const isEdit = !!ext;
-    openEditor({
-      title: isEdit ? 'Editar Ramal' : 'Novo Ramal',
-      saveLabel: isEdit ? 'Salvar' : 'Adicionar',
-      fields: [
-        { id:'ee-label',  label:'Nome *',        type:'text',   value: ext?.label,   placeholder:'Ex: UTI Adulto' },
-        { id:'ee-number', label:'Número *',      type:'text',   value: ext?.number,  placeholder:'Ex: 2210' },
-        { id:'ee-icon',   label:'Ícone (emoji)', type:'text',   value: ext?.icon || '📞', placeholder:'📞' },
-        { id:'ee-order',  label:'Ordem',         type:'number', value: ext?.sort_order ?? 0 },
-      ],
-      async onSave(v) {
-        if (!v['ee-label'].trim()) throw new Error('Nome obrigatório');
-        if (!v['ee-number'].trim()) throw new Error('Número obrigatório');
-        const fields = {
-          label: v['ee-label'].trim(), number: v['ee-number'].trim(),
-          icon: v['ee-icon'].trim() || '📞', sort_order: parseInt(v['ee-order']) || 0,
-        };
-        if (isEdit) await Extensions.update(ext.id, fields);
-        else        await Extensions.create(currentSector.id, fields);
-        await loadExtensions();
-      }
-    });
-  };
-
-  /* =========================================================
-     DOCUMENTOS
-     ========================================================= */
+  /* ===== DOCUMENTOS ===== */
   async function loadDocuments() {
     if (!currentSector) return;
     cachedDocuments = await Documents.list(currentSector.id);
     const container = document.getElementById('documents-container');
-    const card      = document.getElementById('documents-card');
+    const card = document.getElementById('documents-card');
     if (!container) return;
-    if (cachedDocuments.length === 0 && !isAdminUser()) { card.style.display = 'none'; return; }
+    if (cachedDocuments.length === 0 && !isAdminUser()) { card.style.display='none'; return; }
     card.style.display = '';
     const admin = isAdminUser();
     container.innerHTML = cachedDocuments.length
@@ -494,49 +377,38 @@
       : `<li class="empty-admin">Nenhum documento ainda.</li>`;
   }
 
-  window.editDocument = function(id) {
-    const d = cachedDocuments.find(x => x.id === id);
-    if (d) openDocumentEditor(d);
-  };
+  window.editDocument = function(id) { const d=cachedDocuments.find(x=>x.id===id); if(d) openDocumentEditor(d); };
   window.deleteDocument = async function(id) {
     if (!confirm('Excluir este documento?')) return;
-    try { await Documents.remove(id); await loadDocuments(); }
-    catch(e) { alert('Erro: ' + e.message); }
+    try { await Documents.remove(id); await loadDocuments(); } catch(e) { alert('Erro: '+e.message); }
   };
-  window.openDocumentEditor = function(doc = null) {
+  window.openDocumentEditor = function(doc=null) {
     const isEdit = !!doc;
     openEditor({
-      title: isEdit ? 'Editar Documento' : 'Novo Documento',
-      saveLabel: isEdit ? 'Salvar' : 'Adicionar',
+      title: isEdit ? 'Editar Documento' : 'Novo Documento', saveLabel: isEdit ? 'Salvar' : 'Adicionar',
       fields: [
-        { id:'ed-label', label:'Nome *',        type:'text',   value: doc?.label,   placeholder:'Ex: POP Triagem Manchester' },
-        { id:'ed-url',   label:'URL',           type:'text',   value: doc?.url==='#'?'':doc?.url, placeholder:'https://...' },
-        { id:'ed-icon',  label:'Ícone (emoji)', type:'text',   value: doc?.icon || '📄', placeholder:'📄' },
-        { id:'ed-order', label:'Ordem',         type:'number', value: doc?.sort_order ?? 0 },
+        { id:'ed-label', label:'Nome *',        type:'text',   value: doc?.label, placeholder:'Ex: POP Triagem Manchester' },
+        { id:'ed-url',   label:'URL / Link',    type:'text',   value: doc?.url==='#'?'':doc?.url, placeholder:'https://...' },
+        { id:'ed-icon',  label:'Ícone (emoji)', type:'text',   value: doc?.icon||'📄', placeholder:'📄' },
+        { id:'ed-order', label:'Ordem',         type:'number', value: doc?.sort_order??0 },
       ],
       async onSave(v) {
         if (!v['ed-label'].trim()) throw new Error('Nome obrigatório');
-        const fields = {
-          label: v['ed-label'].trim(), url: v['ed-url'].trim() || '#',
-          icon: v['ed-icon'].trim() || '📄', sort_order: parseInt(v['ed-order']) || 0,
-        };
-        if (isEdit) await Documents.update(doc.id, fields);
-        else        await Documents.create(currentSector.id, fields);
+        const fields = { label:v['ed-label'].trim(), url:v['ed-url'].trim()||'#', icon:v['ed-icon'].trim()||'📄', sort_order:parseInt(v['ed-order'])||0 };
+        if (isEdit) await Documents.update(doc.id, fields); else await Documents.create(currentSector.id, fields);
         await loadDocuments();
       }
     });
   };
 
-  /* =========================================================
-     FAQs
-     ========================================================= */
+  /* ===== FAQs ===== */
   async function loadFAQs() {
     if (!currentSector) return;
     cachedFaqs = await FAQs.list(currentSector.id);
     const container = document.getElementById('faqs-container');
-    const section   = document.getElementById('faqs-section');
+    const section = document.getElementById('faqs-section');
     if (!container) return;
-    if (cachedFaqs.length === 0 && !isAdminUser()) { section.style.display = 'none'; return; }
+    if (cachedFaqs.length === 0 && !isAdminUser()) { section.style.display='none'; return; }
     section.style.display = '';
     const admin = isAdminUser();
     container.innerHTML = cachedFaqs.length
@@ -553,63 +425,76 @@
     initFaq();
   }
 
-  window.editFaq = function(id) {
-    const f = cachedFaqs.find(x => x.id === id);
-    if (f) openFaqEditor(f);
-  };
+  window.editFaq = function(id) { const f=cachedFaqs.find(x=>x.id===id); if(f) openFaqEditor(f); };
   window.deleteFaq = async function(id) {
     if (!confirm('Excluir esta pergunta?')) return;
-    try { await FAQs.remove(id); await loadFAQs(); }
-    catch(e) { alert('Erro: ' + e.message); }
+    try { await FAQs.remove(id); await loadFAQs(); } catch(e) { alert('Erro: '+e.message); }
   };
-  window.openFaqEditor = function(faq = null) {
+  window.openFaqEditor = function(faq=null) {
     const isEdit = !!faq;
     openEditor({
-      title: isEdit ? 'Editar Pergunta' : 'Nova Pergunta',
-      saveLabel: isEdit ? 'Salvar' : 'Adicionar',
+      title: isEdit ? 'Editar Pergunta' : 'Nova Pergunta', saveLabel: isEdit ? 'Salvar' : 'Adicionar',
       fields: [
         { id:'ef2-question', label:'Pergunta *',  type:'text',     value: faq?.question, placeholder:'Ex: Como solicitar leito de UTI?' },
-        { id:'ef2-answer',   label:'Resposta *',  type:'textarea', value: faq?.answer,   rows:4 },
-        { id:'ef2-order',    label:'Ordem',       type:'number',   value: faq?.sort_order ?? 0 },
+        { id:'ef2-answer',   label:'Resposta *',  type:'textarea', value: faq?.answer, rows:4 },
+        { id:'ef2-order',    label:'Ordem',       type:'number',   value: faq?.sort_order??0 },
       ],
       async onSave(v) {
         if (!v['ef2-question'].trim()) throw new Error('Pergunta obrigatória');
         if (!v['ef2-answer'].trim())   throw new Error('Resposta obrigatória');
-        const fields = {
-          question: v['ef2-question'].trim(),
-          answer:   v['ef2-answer'].trim(),
-          sort_order: parseInt(v['ef2-order']) || 0,
-        };
-        if (isEdit) await FAQs.update(faq.id, fields);
-        else        await FAQs.create(currentSector.id, fields);
+        const fields = { question:v['ef2-question'].trim(), answer:v['ef2-answer'].trim(), sort_order:parseInt(v['ef2-order'])||0 };
+        if (isEdit) await FAQs.update(faq.id, fields); else await FAQs.create(currentSector.id, fields);
         await loadFAQs();
       }
     });
   };
 
-  /* =========================================================
-     EDITOR GENÉRICO (modal reutilizável)
-     ========================================================= */
+  /* ===== APP DESTAQUE (edição) ===== */
+  window.openAppEditor = function() {
+    openEditor({
+      title: 'Editar App em Destaque',
+      saveLabel: 'Salvar',
+      fields: [
+        { id:'ea-name', label:'Nome do app', type:'text', value: currentSector?.featured_app_name||'', placeholder:'Ex: App de Gerenciamento de Leitos' },
+        { id:'ea-url',  label:'URL do app',  type:'text', value: currentSector?.featured_app_url||'',  placeholder:'https://...' },
+      ],
+      async onSave(v) {
+        const name = v['ea-name'].trim();
+        const url  = v['ea-url'].trim() || null;
+        await Sectors.update(currentSector.id, { featured_app_name: name || null, featured_app_url: url });
+        currentSector.featured_app_name = name;
+        currentSector.featured_app_url  = url;
+        const appDiv  = document.getElementById('featured-app');
+        const nameEl  = document.getElementById('featured-app-name');
+        const linkEl  = document.getElementById('featured-app-link');
+        if (url) {
+          nameEl.textContent = name || 'Sistema';
+          linkEl.href = url;
+          linkEl.textContent = `🚀 Abrir ${name || 'Sistema'}`;
+          appDiv.style.display = '';
+        } else {
+          appDiv.style.display = 'none';
+        }
+      }
+    });
+  };
+
+  /* ===== EDITOR GENÉRICO ===== */
   function openEditor({ title, fields, saveLabel, onSave }) {
     const mid = 'hps-generic-modal';
     document.getElementById(mid)?.remove();
 
     function buildField(f) {
-      const val = escAttr(f.value ?? '');
-      if (f.type === 'textarea') {
+      if (f.type === 'textarea')
         return `<label>${esc(f.label)}<textarea id="${f.id}" rows="${f.rows||3}" placeholder="${escAttr(f.placeholder||'')}">${esc(f.value||'')}</textarea></label>`;
-      }
-      if (f.type === 'checkbox') {
+      if (f.type === 'checkbox')
         return `<label class="hps-f-checkbox" style="flex-direction:row;align-items:center;gap:8px;cursor:pointer;">
-          <input type="checkbox" id="${f.id}" ${f.value?'checked':''}> <span>${esc(f.label)}</span></label>`;
-      }
+          <input type="checkbox" id="${f.id}" ${f.value?'checked':''}><span>${esc(f.label)}</span></label>`;
       if (f.type === 'select') {
-        const opts = (f.options||[]).map(o =>
-          `<option value="${escAttr(o.v)}" ${f.value===o.v?'selected':''}>${esc(o.l)}</option>`
-        ).join('');
+        const opts = (f.options||[]).map(o => `<option value="${escAttr(o.v)}" ${f.value===o.v?'selected':''}>${esc(o.l)}</option>`).join('');
         return `<label>${esc(f.label)}<select id="${f.id}">${opts}</select></label>`;
       }
-      return `<label>${esc(f.label)}<input id="${f.id}" type="${f.type||'text'}" value="${val}" placeholder="${escAttr(f.placeholder||'')}"></label>`;
+      return `<label>${esc(f.label)}<input id="${f.id}" type="${f.type||'text'}" value="${escAttr(f.value??'')}" placeholder="${escAttr(f.placeholder||'')}"></label>`;
     }
 
     const el = document.createElement('div');
@@ -617,10 +502,7 @@
     el.id = mid;
     el.innerHTML = `
       <div class="hps-modal">
-        <div class="hps-modal-header">
-          <h3>${esc(title)}</h3>
-          <button class="hps-modal-close" data-close="${mid}">✕</button>
-        </div>
+        <div class="hps-modal-header"><h3>${esc(title)}</h3><button class="hps-modal-close" data-close="${mid}">✕</button></div>
         <div class="hps-modal-body">${fields.map(buildField).join('')}</div>
         <div class="hps-modal-footer">
           <button class="hps-bar-btn" data-close="${mid}">Cancelar</button>
@@ -629,91 +511,73 @@
       </div>`;
 
     document.body.appendChild(el);
-    function closeModal() { el.classList.remove('open'); setTimeout(() => el.remove(), 280); }
+    const closeModal = () => { el.classList.remove('open'); setTimeout(() => el.remove(), 280); };
     el.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
     el.addEventListener('click', e => { if (e.target === el) closeModal(); });
     requestAnimationFrame(() => { el.classList.add('open'); el.querySelector('input,textarea,select')?.focus(); });
 
     document.getElementById('ge-save-btn').addEventListener('click', async function() {
-      this.disabled = true;
-      this.textContent = 'Salvando…';
+      this.disabled = true; this.textContent = 'Salvando…';
       const values = {};
-      fields.forEach(f => {
-        const el = document.getElementById(f.id);
-        values[f.id] = f.type === 'checkbox' ? el.checked : el.value;
-      });
-      try {
-        await onSave(values);
-        closeModal();
-      } catch(e) {
-        alert('Erro: ' + e.message);
-        this.disabled = false;
-        this.textContent = saveLabel || 'Salvar';
-      }
+      fields.forEach(f => { const el = document.getElementById(f.id); values[f.id] = f.type==='checkbox' ? el.checked : el.value; });
+      try { await onSave(values); closeModal(); }
+      catch(e) { alert('Erro: ' + e.message); this.disabled=false; this.textContent=saveLabel||'Salvar'; }
     });
   }
 
-  /* =========================================================
-     SETOR — meta e renderização
-     ========================================================= */
+  /* ===== SECTOR META ===== */
   function renderSectorMeta(sector) {
     document.title = `${sector.name} — Portal HPS | Hapvida`;
     document.getElementById('bc-sector-name').textContent = sector.name;
-    document.getElementById('sector-emoji').textContent  = sector.emoji;
-    document.getElementById('sector-name').textContent   = sector.name;
-    document.getElementById('sector-desc').textContent   = sector.description || '';
-    document.getElementById('sector-hero').style.display = '';
+    document.getElementById('sector-emoji').textContent   = sector.emoji;
+    document.getElementById('sector-name').textContent    = sector.name;
+    document.getElementById('sector-desc').textContent    = sector.description || '';
+    document.getElementById('sector-hero').style.display  = '';
     document.getElementById('footer-sector-name').textContent = `${sector.name} · Hospital Paulo Sacramento`;
-
     if (sector.featured_app_url) {
       document.getElementById('featured-app-name').textContent = sector.featured_app_name || 'Sistema';
-      document.getElementById('featured-app-link').href = sector.featured_app_url;
+      document.getElementById('featured-app-link').href        = sector.featured_app_url;
       document.getElementById('featured-app-link').textContent = `🚀 Abrir ${sector.featured_app_name || 'Sistema'}`;
-      document.getElementById('featured-app').style.display = '';
+      document.getElementById('featured-app').style.display    = '';
     }
   }
 
-  /* ---- Real-time ---- */
+  /* ===== REAL-TIME ===== */
   function setupRealtime(sectorId) {
     if (realtimeChannel) realtimeChannel.unsubscribe();
     realtimeChannel = Posts.subscribeToChanges(sectorId, () => loadPosts());
     const badge = document.getElementById('hps-live-badge');
-    db.channel('system').subscribe(status => {
-      if (badge) badge.style.display = status === 'SUBSCRIBED' ? '' : 'none';
-    });
+    db.channel('system').subscribe(status => { if (badge) badge.style.display = status==='SUBSCRIBED' ? '' : 'none'; });
     if (badge) badge.style.display = '';
   }
 
-  /* ---- Mostrar botões admin ---- */
+  /* ===== ADMIN CONTROLS ===== */
   function showAdminControls() {
-    ['btn-novo-aviso','btn-add-link','btn-add-ext','btn-add-doc','btn-add-faq']
-      .forEach(id => { const b = document.getElementById(id); if (b) b.style.display = ''; });
+    ['btn-novo-aviso','btn-add-link','btn-add-doc','btn-add-faq','btn-edit-app']
+      .forEach(id => { const b=document.getElementById(id); if(b) b.style.display=''; });
   }
   function hideAdminControls() {
-    ['btn-novo-aviso','btn-add-link','btn-add-ext','btn-add-doc','btn-add-faq']
-      .forEach(id => { const b = document.getElementById(id); if (b) b.style.display = 'none'; });
+    ['btn-novo-aviso','btn-add-link','btn-add-doc','btn-add-faq','btn-edit-app']
+      .forEach(id => { const b=document.getElementById(id); if(b) b.style.display='none'; });
   }
 
-  /* ---- Reload geral ---- */
   async function reloadAll() {
-    await Promise.all([loadPosts(), loadLinks(), loadExtensions(), loadDocuments(), loadFAQs()]);
+    await Promise.all([loadPosts(), loadLinks(), loadDocuments(), loadFAQs()]);
   }
 
-  /* ---- Init ---- */
+  /* ===== INIT ===== */
   async function init() {
     const slug = new URLSearchParams(location.search).get('slug');
-    if (!slug) { location.href = 'index.html'; return; }
+    if (!slug) { location.href='index.html'; return; }
 
-    try {
-      currentSector = await Sectors.get(slug);
-    } catch(e) {
+    try { currentSector = await Sectors.get(slug); }
+    catch(e) {
       document.getElementById('posts-container').innerHTML =
         `<p style="color:var(--vermelho);padding:24px;">Setor não encontrado: <strong>${esc(slug)}</strong></p>`;
       return;
     }
 
     renderSectorMeta(currentSector);
-
     currentUser = await Auth.getUser();
     if (isAdminUser()) showAdminControls();
 

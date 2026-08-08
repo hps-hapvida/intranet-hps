@@ -51,9 +51,12 @@
   <!-- ===== MAIN ===== -->
   <main class="main-container">
     <section id="setores">
-      <div class="sectors-intro" style="margin-bottom: 20px;">
-        <h2>Setores do Hospital</h2>
-        <p>Clique em um setor para acessar seus recursos, avisos, links e ferramentas.</p>
+      <div class="sectors-intro" style="margin-bottom: 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h2>Setores do Hospital</h2>
+          <p>Clique em um setor para acessar seus recursos, avisos, links e ferramentas.</p>
+        </div>
+        <button id="btn-novo-setor" class="btn-primary" style="display:none" onclick="openSectorEditor()">+ Novo Setor</button>
       </div>
       <div class="sector-grid" id="sector-grid">
         <div class="loading-state" style="grid-column:1/-1">
@@ -76,65 +79,185 @@
   <script src="assets/js/db.js"></script>
   <script src="assets/js/main.js"></script>
   <script>
+  let currentUser = null;
+  function isAdminUser() { return !!currentUser && currentUser.app_metadata?.role === 'admin'; }
+  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  /* ===== EDITOR GENÉRICO ===== */
+  function openEditor({ title, fields, saveLabel, onSave }) {
+    const mid = 'hps-generic-modal';
+    document.getElementById(mid)?.remove();
+    function buildField(f) {
+      if (f.type === 'textarea')
+        return `<label>${esc(f.label)}<textarea id="${f.id}" rows="${f.rows||3}" placeholder="${escAttr(f.placeholder||'')}">${esc(f.value||'')}</textarea></label>`;
+      if (f.type === 'select') {
+        const opts = (f.options||[]).map(o => `<option value="${escAttr(o.v)}" ${f.value===o.v?'selected':''}>${esc(o.l)}</option>`).join('');
+        return `<label>${esc(f.label)}<select id="${f.id}">${opts}</select></label>`;
+      }
+      return `<label>${esc(f.label)}<input id="${f.id}" type="${f.type||'text'}" value="${escAttr(f.value??'')}" placeholder="${escAttr(f.placeholder||'')}"></label>`;
+    }
+    const el = document.createElement('div');
+    el.className = 'hps-modal-overlay'; el.id = mid;
+    el.innerHTML = `
+      <div class="hps-modal">
+        <div class="hps-modal-header"><h3>${esc(title)}</h3><button class="hps-modal-close" data-close="${mid}">✕</button></div>
+        <div class="hps-modal-body">${fields.map(buildField).join('')}</div>
+        <div class="hps-modal-footer">
+          <button class="hps-bar-btn" data-close="${mid}">Cancelar</button>
+          <button class="hps-bar-btn primary" id="ge-save-btn">${esc(saveLabel||'Salvar')}</button>
+        </div>
+      </div>`;
+    document.body.appendChild(el);
+    const closeModal = () => { el.classList.remove('open'); setTimeout(() => el.remove(), 280); };
+    el.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
+    el.addEventListener('click', e => { if (e.target === el) closeModal(); });
+    requestAnimationFrame(() => { el.classList.add('open'); el.querySelector('input,textarea,select')?.focus(); });
+    document.getElementById('ge-save-btn').addEventListener('click', async function() {
+      this.disabled = true; this.textContent = 'Salvando…';
+      const values = {};
+      fields.forEach(f => { const el = document.getElementById(f.id); values[f.id] = el.value; });
+      try { await onSave(values); closeModal(); }
+      catch(e) { alert('Erro: ' + e.message); this.disabled=false; this.textContent=saveLabel||'Salvar'; }
+    });
+  }
+
+  /* ===== SECTOR CRUD ===== */
+  const SECTOR_COLORS = [
+    {v:'blue',l:'🔵 Azul'},{v:'red',l:'🔴 Vermelho'},{v:'green',l:'🟢 Verde'},
+    {v:'orange',l:'🟠 Laranja'},{v:'purple',l:'🟣 Roxo'},{v:'teal',l:'🩵 Ciano'},
+    {v:'yellow',l:'🟡 Amarelo'},{v:'pink',l:'🩷 Rosa'}
+  ];
+
+  window.openSectorEditor = function(sector=null) {
+    const isEdit = !!sector;
+    openEditor({
+      title: isEdit ? 'Editar Setor' : 'Novo Setor',
+      saveLabel: isEdit ? 'Salvar' : 'Criar setor',
+      fields: [
+        { id:'es-name',  label:'Nome *',          type:'text',    value: sector?.name,        placeholder:'Ex: Pronto Socorro' },
+        { id:'es-slug',  label:'Slug (URL) *',    type:'text',    value: sector?.slug,        placeholder:'Ex: pronto-socorro' },
+        { id:'es-emoji', label:'Emoji',           type:'text',    value: sector?.emoji||'🏥', placeholder:'🏥' },
+        { id:'es-color', label:'Cor',             type:'select',  value: sector?.color||'blue', options: SECTOR_COLORS },
+        { id:'es-desc',  label:'Descrição',       type:'textarea',value: sector?.description, rows:2 },
+        { id:'es-order', label:'Ordem',           type:'number',  value: sector?.sort_order??99 },
+        { id:'es-aname', label:'App destaque (nome)', type:'text',value: sector?.featured_app_name||'', placeholder:'Ex: App de Leitos' },
+        { id:'es-aurl',  label:'App destaque (URL)',  type:'text',value: sector?.featured_app_url||'',  placeholder:'https://...' },
+      ],
+      async onSave(v) {
+        const name = v['es-name'].trim();
+        const slug = v['es-slug'].trim().toLowerCase().replace(/\s+/g,'-');
+        if (!name) throw new Error('Nome obrigatório');
+        if (!slug) throw new Error('Slug obrigatório');
+        const fields = {
+          name, slug,
+          emoji:             v['es-emoji'].trim() || '🏥',
+          color:             v['es-color'],
+          description:       v['es-desc'].trim() || null,
+          sort_order:        parseInt(v['es-order']) || 99,
+          featured_app_name: v['es-aname'].trim() || null,
+          featured_app_url:  v['es-aurl'].trim()  || null,
+        };
+        if (isEdit) await Sectors.update(sector.id, fields);
+        else        await Sectors.create(fields);
+        await renderSectors();
+      }
+    });
+  };
+
+  window.deleteSector = async function(id, name) {
+    if (!confirm(`Excluir o setor "${name}"? Todos os avisos, links e documentos deste setor também serão excluídos.`)) return;
+    try { await Sectors.remove(id); await renderSectors(); }
+    catch(e) { alert('Erro ao excluir: ' + e.message); }
+  };
+
+  // ---- Render sectors ----
+  async function renderSectors() {
+    const grid = document.getElementById('sector-grid');
+    const admin = isAdminUser();
+    // show/hide "novo setor" btn
+    const btnNovo = document.getElementById('btn-novo-setor');
+    if (btnNovo) btnNovo.style.display = admin ? '' : 'none';
+    try {
+      const sectors = await Sectors.list();
+      if (!sectors.length && !admin) {
+        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--cinza-texto);padding:40px">Nenhum setor cadastrado.</p>';
+        return;
+      }
+      grid.innerHTML = sectors.map(s => {
+        const hasApp = !!s.featured_app_url;
+        return `<div class="sector-card-wrap" style="position:relative">
+          <a href="setor.html?slug=${encodeURIComponent(s.slug)}" class="sector-card" data-color="${escAttr(s.color)}">
+            ${hasApp ? '<span class="sector-badge">APP</span>' : ''}
+            <div class="sector-icon">${esc(s.emoji)}</div>
+            <h3>${esc(s.name)}</h3>
+            <p>${esc(s.description || '')}</p>
+          </a>
+          ${admin ? `<div class="sector-admin-btns">
+            <button onclick="openSectorEditor(${escAttr(JSON.stringify(s))})" title="Editar setor">✏️</button>
+            <button onclick="deleteSector('${escAttr(s.id)}','${escAttr(s.name)}')" title="Excluir setor">🗑</button>
+          </div>` : ''}
+        </div>`;
+      }).join('');
+
+      // busca
+      const input = document.getElementById('search-input');
+      if (input) {
+        input.oninput = () => {
+          const q = input.value.toLowerCase();
+          grid.querySelectorAll('.sector-card-wrap').forEach(w => {
+            w.style.display = w.textContent.toLowerCase().includes(q) ? '' : 'none';
+          });
+        };
+      }
+    } catch(e) {
+      grid.innerHTML = `<p style="color:var(--vermelho);grid-column:1/-1;padding:24px;text-align:center">
+        Erro ao conectar ao banco de dados.<br>
+        <small>Verifique as credenciais em <code>assets/js/config.js</code></small>
+      </p>`;
+    }
+  }
+
+  // ---- Render user nav (login/logout) ----
+  async function renderUserNav() {
+    currentUser = await Auth.getUser();
+    const nav  = document.getElementById('user-nav');
+    if (!nav) return;
+    if (currentUser) {
+      const isAdmin = currentUser.app_metadata?.role === 'admin';
+      nav.innerHTML = `
+        <span style="font-size:13px;opacity:.8;margin-left:4px">${isAdmin ? '✏️ Admin' : '👤 ' + (currentUser.email?.split('@')[0] || '')}</span>
+        <button class="hps-admin-btn active" id="logout-btn" style="margin-left:6px">Sair</button>`;
+      document.getElementById('logout-btn').addEventListener('click', async () => {
+        await Auth.signOut(); currentUser = null; await Promise.all([renderUserNav(), renderSectors()]);
+      });
+    } else {
+      nav.innerHTML = `<a href="login.html" class="hps-admin-btn" style="margin-left:8px;text-decoration:none">🔒 Admin</a>`;
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', async () => {
     updateDateTime();
-
-    // ---- Render user nav (login/logout) ----
-    async function renderUserNav() {
-      const user = await Auth.getUser();
-      const nav  = document.getElementById('user-nav');
-      if (!nav) return;
-      if (user) {
-        const isAdmin = user.app_metadata?.role === 'admin';
-        nav.innerHTML = `
-          <span style="font-size:13px;opacity:.8;margin-left:4px">${isAdmin ? '✏️ Admin' : '👤 ' + (user.email?.split('@')[0] || '')}</span>
-          <button class="hps-admin-btn active" id="logout-btn" style="margin-left:6px">Sair</button>`;
-        document.getElementById('logout-btn').addEventListener('click', async () => {
-          await Auth.signOut();
-          renderUserNav();
-        });
-      } else {
-        nav.innerHTML = `<a href="login.html" class="hps-admin-btn" style="margin-left:8px;text-decoration:none">🔒 Admin</a>`;
-      }
-    }
-
-    // ---- Render sectors ----
-    async function renderSectors() {
-      const grid = document.getElementById('sector-grid');
-      try {
-        const sectors = await Sectors.list();
-        grid.innerHTML = sectors.map(s => {
-          const hasApp = !!s.featured_app_url;
-          return `<a href="setor.html?slug=${encodeURIComponent(s.slug)}" class="sector-card" data-color="${s.color}">
-            ${hasApp ? '<span class="sector-badge">APP</span>' : ''}
-            <div class="sector-icon">${s.emoji}</div>
-            <h3>${s.name}</h3>
-            <p>${s.description || ''}</p>
-          </a>`;
-        }).join('');
-
-        // Pesquisa
-        const input = document.getElementById('search-input');
-        if (input) {
-          input.addEventListener('input', () => {
-            const q = input.value.toLowerCase();
-            grid.querySelectorAll('.sector-card').forEach(card => {
-              card.style.display = card.textContent.toLowerCase().includes(q) ? '' : 'none';
-            });
-          });
-        }
-      } catch(e) {
-        grid.innerHTML = `<p style="color:var(--vermelho);grid-column:1/-1;padding:24px;text-align:center">
-          Erro ao conectar ao banco de dados.<br>
-          <small>Verifique as credenciais em <code>assets/js/config.js</code></small>
-        </p>`;
-      }
-    }
-
-    await Promise.all([renderUserNav(), renderSectors()]);
-
-    Auth.onAuthChange(renderUserNav);
+    await renderUserNav();
+    await renderSectors();
+    Auth.onAuthChange(async (user) => { currentUser = user; await Promise.all([renderUserNav(), renderSectors()]); });
   });
   </script>
+  <style>
+    .sector-card-wrap { position: relative; }
+    .sector-admin-btns {
+      position: absolute; top: 8px; right: 8px;
+      display: flex; gap: 4px;
+      opacity: 0; transition: opacity .15s;
+      z-index: 2;
+    }
+    .sector-card-wrap:hover .sector-admin-btns { opacity: 1; }
+    .sector-admin-btns button {
+      background: rgba(255,255,255,.85); border: none; cursor: pointer;
+      padding: 4px 7px; border-radius: 6px; font-size: 13px; line-height: 1;
+      box-shadow: 0 1px 4px rgba(0,0,0,.15);
+    }
+    .sector-admin-btns button:hover { background: #fff; }
+  </style>
 </body>
 </html>

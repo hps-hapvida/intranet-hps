@@ -66,6 +66,21 @@ const Sectors = {
       .single();
     if (error) throw error;
     return data;
+  },
+
+  async create(fields) {
+    const { data, error } = await db
+      .from('sectors')
+      .insert(fields)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  },
+
+  async remove(id) {
+    const { error } = await db.from('sectors').delete().eq('id', id);
+    if (error) throw error;
   }
 };
 

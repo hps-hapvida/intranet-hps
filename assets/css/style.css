@@ -1174,3 +1174,21 @@ body.hps-admin-mode .site-header { top: 44px !important; }
   margin: 0;
   font-weight: 600;
 }
+
+/* Checkbox inline dentro do openEditor genérico */
+.hps-f-checkbox {
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.hps-f-checkbox input[type=checkbox] {
+  width: 18px; height: 18px;
+  accent-color: var(--azul);
+  flex-shrink: 0;
+  border: none; border-radius: 0; padding: 0; background: none; box-shadow: none;
+}
