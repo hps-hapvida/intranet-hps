@@ -53,6 +53,44 @@
       cursor: pointer; white-space: nowrap;
     }
     .btn-edit-app-link:hover { background: rgba(255,255,255,.3); }
+
+    /* Bloco Aviso Cirúrgico */
+    .aviso-cir-block {
+      display: flex; align-items: center; gap: 20px;
+      background: linear-gradient(135deg, #0d5c4a 0%, #0f7a5e 60%, #1a9e78 100%);
+      border-radius: 14px; padding: 22px 28px; margin-bottom: 24px;
+      box-shadow: 0 4px 18px rgba(13,92,74,.28);
+      text-decoration: none; color: #fff;
+      transition: transform .18s, box-shadow .18s;
+      flex-wrap: wrap;
+    }
+    .aviso-cir-block:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(13,92,74,.38);
+    }
+    .aviso-cir-icon {
+      font-size: 46px; flex-shrink: 0;
+      background: rgba(255,255,255,.15);
+      border-radius: 14px; width: 72px; height: 72px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .aviso-cir-info { flex: 1; min-width: 0; }
+    .aviso-cir-info h3 {
+      font-size: 20px; font-weight: 800; margin: 0 0 4px;
+      letter-spacing: -.01em;
+    }
+    .aviso-cir-info p {
+      font-size: 13px; opacity: .85; margin: 0 0 14px; line-height: 1.45;
+    }
+    .btn-aviso-cir {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff; color: #0d5c4a;
+      font-size: 14px; font-weight: 700;
+      padding: 9px 20px; border-radius: 8px;
+      text-decoration: none; transition: background .15s;
+      white-space: nowrap;
+    }
+    .btn-aviso-cir:hover { background: #e6f9f3; }
   </style>
 </head>
 <body>
@@ -93,6 +131,16 @@
   </section>
 
   <main class="main-container">
+
+    <!-- Bloco Aviso Cirúrgico (apenas Centro Cirúrgico) -->
+    <a href="aviso-cirurgico.html" class="aviso-cir-block" id="aviso-cir-block" style="display:none">
+      <div class="aviso-cir-icon">🔪</div>
+      <div class="aviso-cir-info">
+        <h3>Aviso Cirúrgico</h3>
+        <p>Preencha o formulário institucional e gere o PDF para entrega ao Centro Cirúrgico. Reserva de sangue, UTI, OPME e equipamentos em um só lugar.</p>
+        <span class="btn-aviso-cir">📄 Abrir formulário →</span>
+      </div>
+    </a>
 
     <!-- App Destaque -->
     <div class="app-destaque" id="featured-app" style="display:none">
@@ -539,6 +587,9 @@
       document.getElementById('featured-app-link').href        = sector.featured_app_url;
       document.getElementById('featured-app-link').textContent = `🚀 Abrir ${sector.featured_app_name || 'Sistema'}`;
       document.getElementById('featured-app').style.display    = '';
+    }
+    if (sector.slug === 'centro-cirurgico') {
+      document.getElementById('aviso-cir-block').style.display = '';
     }
   }
 
