@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" fill="none">
+  <!-- Symbol: H stylized with petal/curve -->
+  <g transform="translate(0,4)">
+    <!-- Left column of H -->
+    <rect x="4" y="4" width="14" height="56" rx="4" fill="white"/>
+    <!-- Right column of H -->
+    <rect x="46" y="4" width="14" height="56" rx="4" fill="white"/>
+    <!-- Crossbar of H (curved petal shape) -->
+    <path d="M18 28 Q32 18 46 28 Q32 38 18 28Z" fill="#FF8800"/>
+    <!-- Accent dot -->
+    <circle cx="53" cy="16" r="6" fill="#FFCC23"/>
+  </g>
+  <!-- HAPVIDA text -->
+  <text x="82" y="42" font-family="'Source Sans 3', 'Segoe UI', Arial, sans-serif"
+        font-size="28" font-weight="700" fill="white" letter-spacing="1">HAPVIDA</text>
+  <!-- Tagline -->
+  <text x="83" y="58" font-family="'Source Sans 3', 'Segoe UI', Arial, sans-serif"
+        font-size="10" font-weight="300" fill="rgba(255,255,255,0.75)" letter-spacing="3">NOTREDAME INTERMÉDICA</text>
+</svg>
