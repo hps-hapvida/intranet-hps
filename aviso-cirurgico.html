@@ -7,125 +7,104 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231D71B8'/><text y='24' x='4' font-size='22' font-family='Arial'>🏥</text></svg>">
   <style>
-    .ac-page { max-width: 860px; margin: 0 auto; padding: 0 16px 60px; }
+    .ac-page { max-width: 760px; margin: 0 auto; padding: 0 16px 60px; }
+
     .ac-card {
       background: #fff;
-      border: 1px solid var(--cinza-borda, #e5e7eb);
+      border: 1.5px solid var(--cinza-borda, #e5e7eb);
       border-radius: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       overflow: hidden;
     }
     .ac-card-header {
       background: var(--azul, #1D71B8);
       color: #fff;
-      padding: 12px 20px;
+      padding: 11px 20px;
       font-weight: 700;
-      font-size: 14px;
-      letter-spacing: .03em;
+      font-size: 13px;
+      letter-spacing: .05em;
       text-transform: uppercase;
     }
-    .ac-card-body { padding: 20px; }
-    .ac-grid { display: grid; gap: 14px; }
-    .ac-grid-2 { grid-template-columns: repeat(2, 1fr); }
-    .ac-grid-3 { grid-template-columns: repeat(3, 1fr); }
-    .ac-grid-4 { grid-template-columns: repeat(4, 1fr); }
-    @media (max-width: 600px) {
-      .ac-grid-2, .ac-grid-3, .ac-grid-4 { grid-template-columns: 1fr; }
-    }
+    .ac-card-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+
     .ac-field { display: flex; flex-direction: column; gap: 5px; }
     .ac-field label {
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 11px; font-weight: 700;
       color: var(--cinza-texto, #6b7280);
-      text-transform: uppercase;
-      letter-spacing: .04em;
+      text-transform: uppercase; letter-spacing: .05em;
     }
-    .ac-field input,
-    .ac-field select,
-    .ac-field textarea {
+    .ac-field input, .ac-field select, .ac-field textarea {
       padding: 9px 12px;
       border: 1.5px solid var(--cinza-borda, #e5e7eb);
       border-radius: 8px;
-      font-size: 14px;
-      font-family: inherit;
-      background: #fff;
-      color: var(--texto-escuro, #111827);
+      font-size: 14px; font-family: inherit;
+      background: #fff; color: var(--texto-escuro, #111827);
       transition: border-color .2s, box-shadow .2s;
     }
-    .ac-field input:focus,
-    .ac-field select:focus,
-    .ac-field textarea:focus {
+    .ac-field input:focus, .ac-field select:focus, .ac-field textarea:focus {
       outline: none;
       border-color: var(--azul, #1D71B8);
-      box-shadow: 0 0 0 3px rgba(29,113,184,.13);
+      box-shadow: 0 0 0 3px rgba(29,113,184,.12);
     }
-    .ac-field textarea { resize: vertical; min-height: 72px; }
+    .ac-field textarea { resize: vertical; min-height: 68px; }
+    .ac-field .hint { font-size: 11px; color: var(--cinza-texto,#6b7280); margin-top: 2px; }
 
-    .ac-radio-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+    .ac-row { display: grid; gap: 14px; }
+    .ac-row-2 { grid-template-columns: repeat(2, 1fr); }
+    .ac-row-3 { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width:560px) { .ac-row-2, .ac-row-3 { grid-template-columns: 1fr; } }
+
+    .ac-radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
     .ac-radio-group label {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 14px; font-weight: 400; text-transform: none; letter-spacing: normal;
-      cursor: pointer; padding: 7px 14px;
-      border: 1.5px solid var(--cinza-borda, #e5e7eb);
-      border-radius: 8px; color: var(--texto-escuro, #111827);
-      transition: border-color .15s, background .15s;
+      display: flex; align-items: center; gap: 6px; cursor: pointer;
+      padding: 7px 14px; border: 1.5px solid var(--cinza-borda,#e5e7eb);
+      border-radius: 8px; font-size: 14px; font-weight: 400;
+      text-transform: none; letter-spacing: normal;
+      color: var(--texto-escuro,#111827); transition: border-color .15s, background .15s;
       user-select: none;
     }
-    .ac-radio-group input[type=radio] { accent-color: var(--azul, #1D71B8); }
+    .ac-radio-group input[type=radio] { accent-color: var(--azul,#1D71B8); }
     .ac-radio-group label:has(input:checked) {
-      border-color: var(--azul, #1D71B8);
-      background: rgba(29,113,184,.08);
+      border-color: var(--azul,#1D71B8);
+      background: rgba(29,113,184,.07);
     }
 
-    .ac-check-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .ac-check-row input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--azul, #1D71B8); cursor: pointer; }
-    .ac-check-row span { font-size: 14px; font-weight: 600; color: var(--texto-escuro, #111827); }
+    .ac-toggle { display: flex; align-items: center; gap: 10px; }
+    .ac-toggle input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--azul,#1D71B8); cursor: pointer; flex-shrink: 0; }
+    .ac-toggle span { font-size: 14px; font-weight: 600; cursor: pointer; }
 
-    .ac-subtitle {
-      font-size: 12px; font-weight: 700; color: var(--cinza-texto, #6b7280);
-      text-transform: uppercase; letter-spacing: .04em;
-      margin-bottom: 10px; padding-bottom: 6px;
-      border-bottom: 1px solid var(--cinza-borda, #e5e7eb);
-    }
+    .ac-sub { display: none; padding-top: 4px; }
+    .ac-sub.visible { display: flex; flex-direction: column; gap: 12px; }
 
-    .ac-actions {
-      display: flex; gap: 12px; justify-content: flex-end;
-      padding: 0 0 8px; flex-wrap: wrap;
-    }
+    .ac-actions { display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap; padding-bottom: 8px; }
     .btn-gerar {
-      padding: 12px 28px;
-      background: var(--azul, #1D71B8); color: #fff;
-      border: none; border-radius: 8px;
-      font-size: 15px; font-weight: 700; cursor: pointer;
-      font-family: inherit; transition: background .2s;
+      padding: 12px 28px; background: var(--azul,#1D71B8); color: #fff;
+      border: none; border-radius: 8px; font-size: 15px; font-weight: 700;
+      cursor: pointer; font-family: inherit; transition: background .2s;
     }
     .btn-gerar:hover { background: #155d96; }
     .btn-limpar {
-      padding: 12px 20px;
-      background: none; color: var(--cinza-texto, #6b7280);
-      border: 1.5px solid var(--cinza-borda, #e5e7eb);
-      border-radius: 8px; font-size: 14px; font-weight: 600;
-      cursor: pointer; font-family: inherit; transition: border-color .2s;
+      padding: 12px 20px; background: none; color: var(--cinza-texto,#6b7280);
+      border: 1.5px solid var(--cinza-borda,#e5e7eb); border-radius: 8px;
+      font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
     }
     .btn-limpar:hover { border-color: #aaa; }
-    .ac-required { color: var(--vermelho, #ef4444); margin-left: 2px; }
-    .ac-info-banner {
-      background: #eff6ff; border: 1px solid #bfdbfe;
-      border-radius: 10px; padding: 12px 16px;
-      font-size: 13px; color: #1e40af;
-      margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+
+    .ac-required { color: #ef4444; margin-left: 2px; }
+    .ac-banner {
+      background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px;
+      padding: 11px 16px; font-size: 13px; color: #1e40af; margin-bottom: 18px;
     }
+
     @media (prefers-color-scheme: dark) {
-      .ac-card { background: var(--card-bg, #1e2028); border-color: #2d3145; }
-      .ac-field input, .ac-field select, .ac-field textarea { background: #2d3145; border-color: #3d4460; color: #e8eaf6; }
-      .ac-radio-group label { border-color: #3d4460; color: #e8eaf6; }
-      .ac-info-banner { background: #1a2035; border-color: #2d4070; color: #93c5fd; }
+      .ac-card { background: #1e2028; border-color: #2d3145; }
+      .ac-field input, .ac-field select, .ac-field textarea { background: #2a2d3e; border-color: #3a3d55; color: #e8eaf6; }
+      .ac-radio-group label { border-color: #3a3d55; color: #e8eaf6; }
     }
-    :root[data-theme="dark"] .ac-card { background: var(--card-bg, #1e2028); border-color: #2d3145; }
+    :root[data-theme="dark"] .ac-card { background: #1e2028; border-color: #2d3145; }
     :root[data-theme="dark"] .ac-field input,
     :root[data-theme="dark"] .ac-field select,
-    :root[data-theme="dark"] .ac-field textarea { background: #2d3145; border-color: #3d4460; color: #e8eaf6; }
-    :root[data-theme="dark"] .ac-radio-group label { border-color: #3d4460; color: #e8eaf6; }
+    :root[data-theme="dark"] .ac-field textarea { background: #2a2d3e; border-color: #3a3d55; color: #e8eaf6; }
     :root[data-theme="light"] .ac-card { background: #fff; }
   </style>
 </head>
@@ -157,11 +136,11 @@
     </nav>
   </div>
 
-  <section class="hero" style="padding:28px 24px">
+  <section class="hero" style="padding:26px 24px">
     <div class="hero-inner" style="display:flex;align-items:center;gap:16px">
-      <div style="font-size:44px;flex-shrink:0">🔪</div>
+      <div style="font-size:42px;flex-shrink:0">🔪</div>
       <div>
-        <h1 style="font-size:clamp(18px,3vw,26px)">Aviso Cirúrgico</h1>
+        <h1 style="font-size:clamp(18px,3vw,24px)">Aviso Cirúrgico</h1>
         <p style="margin:0">Preencha o formulário e gere o PDF institucional para entrega ao Centro Cirúrgico.</p>
       </div>
     </div>
@@ -169,589 +148,344 @@
 
   <main class="ac-page">
 
-    <div class="ac-info-banner">
-      ℹ️ Após preencher todos os campos obrigatórios, clique em <strong>Gerar PDF</strong> para baixar o aviso cirúrgico pronto para impressão e entrega ao CC.
+    <div class="ac-banner">
+      ℹ️ Após preencher os campos obrigatórios (<span class="ac-required">*</span>), clique em <strong>Gerar PDF</strong>.
+      O documento gerado é uma cópia fiel do formulário institucional, pronto para impressão.
     </div>
 
-    <!-- IDENTIFICAÇÃO -->
+    <!-- ── SEÇÃO 1: DADOS PARA INCLUSÃO NO MAPA ── -->
     <div class="ac-card">
-      <div class="ac-card-header">📋 Identificação do Procedimento</div>
+      <div class="ac-card-header">📋 Dados para Inclusão no Mapa Cirúrgico</div>
       <div class="ac-card-body">
-        <div class="ac-grid ac-grid-3">
+        <div class="ac-field">
+          <label>Profissional responsável pela entrega do formulário <span class="ac-required">*</span></label>
+          <input type="text" id="f-responsavel" placeholder="Ex: Dra. Maria Silva" autocomplete="off">
+        </div>
+        <div class="ac-row ac-row-3">
           <div class="ac-field">
-            <label>Profissional Responsável <span class="ac-required">*</span></label>
-            <input type="text" id="ac-profissional" placeholder="Nome completo" autocomplete="off">
+            <label>Data para o agendamento <span class="ac-required">*</span></label>
+            <input type="date" id="f-data">
           </div>
           <div class="ac-field">
-            <label>Data Agendamento <span class="ac-required">*</span></label>
-            <input type="date" id="ac-data-agendamento">
+            <label>Horário no Centro Cirúrgico <span class="ac-required">*</span></label>
+            <input type="time" id="f-horario">
           </div>
           <div class="ac-field">
-            <label>Horário CC <span class="ac-required">*</span></label>
-            <input type="time" id="ac-horario-cc">
+            <label>Sala cirúrgica</label>
+            <input type="text" id="f-sala" placeholder="Ex: Sala 2 / A DEFINIR">
           </div>
         </div>
-        <div class="ac-grid ac-grid-3" style="margin-top:14px">
+        <div class="ac-row ac-row-2">
           <div class="ac-field">
-            <label>Sala Cirúrgica</label>
-            <input type="text" id="ac-sala" placeholder="Ex: Sala 2">
+            <label>Tempo aproximado do procedimento</label>
+            <input type="text" id="f-tempo" placeholder="Ex: 1 hora 30 min / A DEFINIR">
           </div>
           <div class="ac-field">
-            <label>Tempo Previsto (horas)</label>
-            <input type="text" id="ac-tempo" placeholder="Ex: 2h30min">
-          </div>
-          <div class="ac-field">
-            <label>CRM do Médico</label>
-            <input type="text" id="ac-crm" placeholder="Ex: 123456-SP">
+            <label>Nome e CRM do médico que fará a abordagem <span class="ac-required">*</span></label>
+            <input type="text" id="f-medico-crm" placeholder="Ex: Dr. Vitor Mercante - CRM 168.254">
+            <span class="hint">Informe nome e CRM juntos, como aparecerá no documento</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- DADOS DO PACIENTE -->
+    <!-- ── SEÇÃO 2: DADOS DO PACIENTE ── -->
     <div class="ac-card">
       <div class="ac-card-header">👤 Dados do Paciente</div>
       <div class="ac-card-body">
-        <div class="ac-grid ac-grid-2">
-          <div class="ac-field">
-            <label>Nome do Paciente <span class="ac-required">*</span></label>
-            <input type="text" id="ac-paciente" placeholder="Nome completo" autocomplete="off">
-          </div>
-          <div class="ac-field">
-            <label>Data de Nascimento</label>
-            <input type="date" id="ac-nasc">
-          </div>
+        <div class="ac-field">
+          <label>Nome completo <span class="ac-required">*</span></label>
+          <input type="text" id="f-paciente" placeholder="Nome completo do paciente" autocomplete="off">
         </div>
-        <div class="ac-grid ac-grid-3" style="margin-top:14px">
+        <div class="ac-row ac-row-3">
           <div class="ac-field">
-            <label>CPF</label>
-            <input type="text" id="ac-cpf" placeholder="000.000.000-00" maxlength="14">
+            <label>Data de nascimento</label>
+            <input type="date" id="f-nasc">
           </div>
           <div class="ac-field">
             <label>Convênio <span class="ac-required">*</span></label>
-            <select id="ac-convenio">
+            <select id="f-convenio">
               <option value="">Selecione…</option>
-              <option>Hapvida</option>
-              <option>NotreDame Intermédica</option>
+              <option>HAPVIDA</option>
+              <option>NOTRE</option>
+              <option>NOTRE SP</option>
               <option>SUS</option>
-              <option>Particular</option>
-              <option>Outro</option>
+              <option>PARTICULAR</option>
+              <option>OUTRO</option>
             </select>
           </div>
           <div class="ac-field">
-            <label>Origem / Procedência</label>
-            <input type="text" id="ac-origem" placeholder="Ex: PS, Enfermaria, Ambulatório">
+            <label>CPF</label>
+            <input type="text" id="f-cpf" placeholder="000.000.000-00" maxlength="14">
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- PROCEDIMENTO -->
-    <div class="ac-card">
-      <div class="ac-card-header">🔪 Procedimento Cirúrgico</div>
-      <div class="ac-card-body">
-        <div class="ac-grid">
-          <div class="ac-field">
-            <label>Nome do Procedimento <span class="ac-required">*</span></label>
-            <input type="text" id="ac-proc-nome" placeholder="Ex: Colecistectomia laparoscópica">
-          </div>
-        </div>
-        <div class="ac-grid ac-grid-2" style="margin-top:14px">
-          <div class="ac-field">
-            <label>Código TUSS</label>
-            <input type="text" id="ac-tuss" placeholder="Ex: 31309193">
-          </div>
-          <div class="ac-field">
-            <label>Diagnóstico (CID)</label>
-            <input type="text" id="ac-diagnostico" placeholder="Ex: K80.1 — Cálculo da vesícula biliar">
-          </div>
-        </div>
-        <div class="ac-grid ac-grid-2" style="margin-top:14px">
-          <div class="ac-field">
-            <label>Lateralidade</label>
-            <div class="ac-radio-group">
-              <label><input type="radio" name="lateralidade" value="Não se aplica" checked> Não se aplica</label>
-              <label><input type="radio" name="lateralidade" value="Direita"> Direita</label>
-              <label><input type="radio" name="lateralidade" value="Esquerda"> Esquerda</label>
-              <label><input type="radio" name="lateralidade" value="Bilateral"> Bilateral</label>
-            </div>
-          </div>
-          <div class="ac-field">
-            <label>Tipo de Anestesia <span class="ac-required">*</span></label>
-            <div class="ac-radio-group">
-              <label><input type="radio" name="anestesia" value="Geral" checked> Geral</label>
-              <label><input type="radio" name="anestesia" value="Raqui"> Raqui</label>
-              <label><input type="radio" name="anestesia" value="Peridural"> Peridural</label>
-              <label><input type="radio" name="anestesia" value="Local"> Local</label>
-              <label><input type="radio" name="anestesia" value="Sedação"> Sedação</label>
-              <label><input type="radio" name="anestesia" value="Bloqueio"> Bloqueio</label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- RESERVAS -->
-    <div class="ac-card">
-      <div class="ac-card-header">🩸 Reservas</div>
-      <div class="ac-card-body">
-        <div class="ac-subtitle">Reserva de Sangue</div>
-        <div class="ac-check-row" style="margin-bottom:14px">
-          <input type="checkbox" id="ac-sangue-check">
-          <span>Solicitar reserva de sangue</span>
-        </div>
-        <div id="ac-sangue-detalhe" style="display:none">
-          <div class="ac-grid ac-grid-3">
-            <div class="ac-field">
-              <label>Quantidade (bolsas)</label>
-              <input type="number" id="ac-sangue-qtd" min="1" max="99" value="2">
-            </div>
-            <div class="ac-field">
-              <label>Tipo sanguíneo</label>
-              <select id="ac-sangue-tipo">
-                <option value="">Não informado</option>
-                <option>A+</option><option>A-</option>
-                <option>B+</option><option>B-</option>
-                <option>AB+</option><option>AB-</option>
-                <option>O+</option><option>O-</option>
-              </select>
-            </div>
-            <div class="ac-field">
-              <label>Hemocomponente</label>
-              <select id="ac-sangue-hemo">
-                <option>Concentrado de Hemácias</option>
-                <option>Plasma Fresco Congelado</option>
-                <option>Concentrado de Plaquetas</option>
-                <option>Sangue total</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="ac-subtitle" style="margin-top:20px">Reserva de UTI</div>
-        <div class="ac-check-row">
-          <input type="checkbox" id="ac-uti-check">
-          <span>Solicitar leito de UTI para pós-operatório</span>
-        </div>
-        <div id="ac-uti-detalhe" style="display:none;margin-top:12px">
-          <div class="ac-field" style="max-width:320px">
-            <label>Tipo de UTI</label>
-            <select id="ac-uti-tipo">
-              <option>UTI Adulto</option>
-              <option>UTI Pediátrica</option>
-              <option>UTI Coronariana</option>
-              <option>Semi-intensiva</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- OPMES / EQUIPAMENTOS -->
-    <div class="ac-card">
-      <div class="ac-card-header">🔧 OPME e Equipamentos</div>
-      <div class="ac-card-body">
-        <div class="ac-grid">
-          <div class="ac-field">
-            <label>OPME (Órteses, Próteses e Materiais Especiais)</label>
-            <textarea id="ac-opme" placeholder="Liste as OPMEs necessárias, uma por linha. Ex:&#10;Prótese total de joelho (marca: X, ref: Y)&#10;Parafuso canulado 7mm"></textarea>
-          </div>
-          <div class="ac-field" style="margin-top:4px">
-            <label>Equipamentos / Materiais Especiais</label>
-            <textarea id="ac-equipamentos" placeholder="Liste os equipamentos necessários. Ex:&#10;Endoscópio 10mm&#10;Fio de sutura absorvível 3-0&#10;Bisturi elétrico com argônio"></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- OBSERVAÇÕES -->
-    <div class="ac-card">
-      <div class="ac-card-header">📝 Observações</div>
-      <div class="ac-card-body">
         <div class="ac-field">
-          <label>Observações gerais / orientações ao CC</label>
-          <textarea id="ac-obs" placeholder="Informações adicionais para a equipe do Centro Cirúrgico…" style="min-height:88px"></textarea>
+          <label>Origem do paciente</label>
+          <input type="text" id="f-origem" placeholder="Ex: PRONTO SOCORRO">
         </div>
       </div>
     </div>
 
-    <!-- AÇÕES -->
+    <!-- ── SEÇÃO 3: INFORMAÇÕES COMPLEMENTARES ── -->
+    <div class="ac-card">
+      <div class="ac-card-header">ℹ️ Informações Complementares</div>
+      <div class="ac-card-body">
+
+        <!-- Reserva sangue -->
+        <div class="ac-field">
+          <label>Necessidade de reserva de sangue</label>
+          <div class="ac-toggle">
+            <input type="checkbox" id="f-sangue-sim">
+            <span>Solicitar reserva de sangue (SIM)</span>
+          </div>
+          <div class="ac-sub" id="f-sangue-sub">
+            <div class="ac-row ac-row-2">
+              <div class="ac-field">
+                <label>Quantidade (bolsas)</label>
+                <input type="number" id="f-sangue-qtd" min="1" max="99" value="2">
+              </div>
+              <div class="ac-field">
+                <label>Qual (hemocomponente / tipo)</label>
+                <input type="text" id="f-sangue-qual" placeholder="Ex: Concentrado de Hemácias / O+">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reserva UTI -->
+        <div class="ac-field">
+          <label>Necessidade de reserva de UTI</label>
+          <div class="ac-toggle">
+            <input type="checkbox" id="f-uti-sim">
+            <span>Solicitar leito de UTI pós-operatório (SIM)</span>
+          </div>
+        </div>
+
+        <!-- OPMES -->
+        <div class="ac-field">
+          <label>OPMES necessários</label>
+          <textarea id="f-opme" placeholder="Ex: CLIP METÁLICO LT 300 E LT 400&#10;2 KITS DE DVE, 01 BROCA - 31401082&#10;(deixe em branco se não houver)"></textarea>
+        </div>
+
+        <!-- Equipamentos -->
+        <div class="ac-field">
+          <label>Equipamentos necessários</label>
+          <textarea id="f-equip" placeholder="Ex: RACK VIDEOCIRURGIA + CAIXA VLP&#10;(deixe em branco se não houver)"></textarea>
+        </div>
+
+        <!-- Procedimento -->
+        <div class="ac-row ac-row-2">
+          <div class="ac-field">
+            <label>Nome do procedimento <span class="ac-required">*</span></label>
+            <input type="text" id="f-proc-nome" placeholder="Ex: COLECISTECTOMIA VIDEOLAPAROSCÓPICA">
+          </div>
+          <div class="ac-field">
+            <label>Código TUSS (opcional)</label>
+            <input type="text" id="f-proc-cod" placeholder="Ex: 31005101">
+            <span class="hint">Será exibido após "///" no documento</span>
+          </div>
+        </div>
+
+        <!-- Lateralidade -->
+        <div class="ac-field">
+          <label>Lado que será operado (lateralidade)</label>
+          <div class="ac-radio-group">
+            <label><input type="radio" name="lat" value="DIREITA"> Direita</label>
+            <label><input type="radio" name="lat" value="ESQUERDA"> Esquerda</label>
+            <label><input type="radio" name="lat" value="BILATERAL"> Bilateral</label>
+            <label><input type="radio" name="lat" value="NÃO SE APLICA" checked> Não se aplica</label>
+          </div>
+        </div>
+
+        <!-- Anestesia -->
+        <div class="ac-field">
+          <label>Tipo de anestesia <span class="ac-required">*</span></label>
+          <div class="ac-radio-group">
+            <label><input type="radio" name="anest" value="GERAL" checked> Geral</label>
+            <label><input type="radio" name="anest" value="RAQUI + SEDAÇÃO"> Raqui + Sedação</label>
+            <label><input type="radio" name="anest" value="LOCAL"> Local</label>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Ações -->
     <div class="ac-actions">
-      <button class="btn-limpar" type="button" onclick="limparFormulario()">Limpar formulário</button>
-      <button class="btn-gerar" type="button" onclick="gerarPDF()">📄 Gerar PDF</button>
+      <button class="btn-limpar" type="button" onclick="limpar()">Limpar formulário</button>
+      <button class="btn-gerar"  type="button" onclick="gerarPDF()">📄 Gerar PDF</button>
     </div>
 
   </main>
 
   <footer class="site-footer">
-    <strong>Centro Cirúrgico · Hospital Paulo Sacramento</strong> · Hapvida NotreDame Intermédica ·
-    Intranet HPS — uso exclusivo da equipe
+    <strong>Centro Cirúrgico · Hospital Paulo Sacramento</strong> · Hapvida NotreDame Intermédica · Intranet HPS
   </footer>
 
-  <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="assets/js/config.js"></script>
   <script>
-  /* ===== Toggle sangue/UTI ===== */
-  document.getElementById('ac-sangue-check').addEventListener('change', function() {
-    document.getElementById('ac-sangue-detalhe').style.display = this.checked ? '' : 'none';
-  });
-  document.getElementById('ac-uti-check').addEventListener('change', function() {
-    document.getElementById('ac-uti-detalhe').style.display = this.checked ? '' : 'none';
+
+  /* ── Toggles ─────────────────────────────────── */
+  document.getElementById('f-sangue-sim').addEventListener('change', function () {
+    document.getElementById('f-sangue-sub').classList.toggle('visible', this.checked);
   });
 
-  /* ===== Máscara CPF ===== */
-  document.getElementById('ac-cpf').addEventListener('input', function() {
+  /* ── Máscara CPF ─────────────────────────────── */
+  document.getElementById('f-cpf').addEventListener('input', function () {
     let v = this.value.replace(/\D/g,'').slice(0,11);
     v = v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
     this.value = v;
   });
 
-  /* ===== Ler valor de radio group ===== */
   function radioVal(name) {
     return document.querySelector(`input[name="${name}"]:checked`)?.value || '';
   }
 
-  /* ===== Limpar formulário ===== */
-  function limparFormulario() {
-    if (!confirm('Limpar todos os campos?')) return;
-    document.querySelectorAll('.ac-page input:not([type=radio]):not([type=checkbox]), .ac-page select, .ac-page textarea').forEach(el => el.value = '');
-    document.querySelector('input[name="lateralidade"][value="Não se aplica"]').checked = true;
-    document.querySelector('input[name="anestesia"][value="Geral"]').checked = true;
-    document.getElementById('ac-sangue-check').checked = false;
-    document.getElementById('ac-uti-check').checked = false;
-    document.getElementById('ac-sangue-detalhe').style.display = 'none';
-    document.getElementById('ac-uti-detalhe').style.display = 'none';
-  }
-
-  /* ===== Formatar data ===== */
   function fmtData(str) {
     if (!str) return '';
     const [y,m,d] = str.split('-');
     return `${d}/${m}/${y}`;
   }
-  function fmtHora(str) { return str || ''; }
 
-  /* ===== Geração do PDF ===== */
+  /* ── Limpar ──────────────────────────────────── */
+  function limpar() {
+    if (!confirm('Limpar todos os campos?')) return;
+    document.querySelectorAll('.ac-page input:not([type=radio]):not([type=checkbox]), .ac-page select, .ac-page textarea')
+      .forEach(el => el.value = '');
+    document.querySelector('input[name="lat"][value="NÃO SE APLICA"]').checked = true;
+    document.querySelector('input[name="anest"][value="GERAL"]').checked = true;
+    document.getElementById('f-sangue-sim').checked = false;
+    document.getElementById('f-uti-sim').checked = false;
+    document.getElementById('f-sangue-sub').classList.remove('visible');
+  }
+
+  /* ── Geração do PDF ──────────────────────────── */
   function gerarPDF() {
-    const profissional = document.getElementById('ac-profissional').value.trim();
-    const dataAg       = document.getElementById('ac-data-agendamento').value;
-    const horarioCC    = document.getElementById('ac-horario-cc').value;
-    const paciente     = document.getElementById('ac-paciente').value.trim();
-    const convenio     = document.getElementById('ac-convenio').value;
-    const procNome     = document.getElementById('ac-proc-nome').value.trim();
-    const anestesia    = radioVal('anestesia');
+    /* Coleta de valores */
+    const v = {
+      responsavel : document.getElementById('f-responsavel').value.trim().toUpperCase(),
+      data        : fmtData(document.getElementById('f-data').value),
+      horario     : document.getElementById('f-horario').value || 'A SEGUIR',
+      sala        : document.getElementById('f-sala').value.trim().toUpperCase()   || 'A DEFINIR',
+      tempo       : document.getElementById('f-tempo').value.trim().toUpperCase()  || 'A DEFINIR',
+      medicoCRM   : document.getElementById('f-medico-crm').value.trim().toUpperCase(),
+      paciente    : document.getElementById('f-paciente').value.trim().toUpperCase(),
+      nasc        : fmtData(document.getElementById('f-nasc').value),
+      convenio    : document.getElementById('f-convenio').value.toUpperCase(),
+      cpf         : document.getElementById('f-cpf').value.trim(),
+      origem      : document.getElementById('f-origem').value.trim().toUpperCase(),
+      sangueSimN  : document.getElementById('f-sangue-sim').checked,
+      sangueQtd   : document.getElementById('f-sangue-qtd').value,
+      sangueQual  : document.getElementById('f-sangue-qual').value.trim().toUpperCase(),
+      utiSim      : document.getElementById('f-uti-sim').checked,
+      opme        : document.getElementById('f-opme').value.trim().toUpperCase()   || 'SEM NECESSIDADE',
+      equip       : document.getElementById('f-equip').value.trim().toUpperCase(),
+      procNome    : document.getElementById('f-proc-nome').value.trim().toUpperCase(),
+      procCod     : document.getElementById('f-proc-cod').value.trim().toUpperCase(),
+      lat         : radioVal('lat'),
+      anest       : radioVal('anest'),
+    };
 
-    if (!profissional) { alert('Informe o profissional responsável.'); return; }
-    if (!dataAg)       { alert('Informe a data de agendamento.'); return; }
-    if (!horarioCC)    { alert('Informe o horário CC.'); return; }
-    if (!paciente)     { alert('Informe o nome do paciente.'); return; }
-    if (!convenio)     { alert('Selecione o convênio.'); return; }
-    if (!procNome)     { alert('Informe o nome do procedimento.'); return; }
+    /* Validação */
+    if (!v.responsavel) { alert('Informe o profissional responsável.'); return; }
+    if (!v.data)        { alert('Informe a data de agendamento.'); return; }
+    if (!v.horario)     { alert('Informe o horário CC.'); return; }
+    if (!v.medicoCRM)   { alert('Informe o nome e CRM do médico.'); return; }
+    if (!v.paciente)    { alert('Informe o nome do paciente.'); return; }
+    if (!v.convenio)    { alert('Selecione o convênio.'); return; }
+    if (!v.procNome)    { alert('Informe o nome do procedimento.'); return; }
 
+    /* Montar textos dos campos de checkbox — exatamente como no Excel */
+    function chk(checked) { return checked ? '( X )' : '(    )'; }
+
+    const linhaLat = `LADO QUE SERÁ OPERADO (LATERALIDADE): ` +
+      `${chk(v.lat==='DIREITA')} DIREITA     ` +
+      `${chk(v.lat==='ESQUERDA')} ESQUERDA     ` +
+      `${chk(v.lat==='BILATERAL')} BILATERAL     ` +
+      `${chk(v.lat==='NÃO SE APLICA')} NÃO SE APLICA`;
+
+    const linhaAnest = `TIPO DE ANESTESIA: ` +
+      `${chk(v.anest==='GERAL')} GERAL     ` +
+      `${chk(v.anest==='RAQUI + SEDAÇÃO')} RAQUI + SEDAÇÃO     ` +
+      `${chk(v.anest==='LOCAL')} LOCAL`;
+
+    const linhaSangue = v.sangueSimN
+      ? `NECESSIDADE RESERVA DE SANGUE: (    ) NÃO     ( X ) SIM  -  QUANTIDADE ( ${v.sangueQtd} )  -  QUAL: ${v.sangueQual}`
+      : `NECESSIDADE RESERVA DE SANGUE: ( X ) NÃO     (    ) SIM  -  QUANTIDADE (    )  -  QUAL: `;
+
+    const linhaUTI = v.utiSim
+      ? `NECESSIDADE RESERVA DE UTI: (    ) NÃO     ( X ) SIM`
+      : `NECESSIDADE RESERVA DE UTI: ( X ) NÃO     (    ) SIM`;
+
+    const procCompleto = v.procCod ? `${v.procNome}  ///  ${v.procCod}` : v.procNome;
+
+    /* ── jsPDF ── */
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-    const PW = 210; // A4 width mm
-    const ML = 14;  // left margin
-    const MR = 14;  // right margin
-    const CW = PW - ML - MR; // content width
-    let Y = 14;
+    const ML  = 20;   // margem esquerda
+    const CW  = 170;  // largura de conteúdo (210 - 20*2)
+    let   Y   = 20;   // posição vertical inicial
 
-    const AZUL     = [29, 113, 184];
-    const AZUL_ESC = [15, 60, 100];
-    const CINZA_BG = [245, 246, 248];
-    const CINZA_BD = [200, 210, 220];
-    const BRANCO   = [255, 255, 255];
-    const PRETO    = [20, 20, 20];
-    const CINZA_TX = [90, 100, 115];
-
-    function setFont(style='normal', size=10) {
-      doc.setFont('helvetica', style);
+    /* Helper: imprime uma linha com quebra automática; retorna nova posição Y */
+    function printLine(text, bold, size, extraSpaceBefore = 0) {
+      Y += extraSpaceBefore;
+      doc.setFont('helvetica', bold ? 'bold' : 'normal');
       doc.setFontSize(size);
+      const lines = doc.splitTextToSize(text, CW);
+      doc.text(lines, ML, Y);
+      const lineH = size * 0.352778 * 1.35; // pt → mm com espaçamento
+      Y += lines.length * lineH;
+      return Y;
     }
 
-    function hLine(y, color=CINZA_BD) {
-      doc.setDrawColor(...color); doc.setLineWidth(0.25);
-      doc.line(ML, y, PW-MR, y);
-    }
+    function blankLine(h = 4) { Y += h; }
 
-    function sectionHeader(label, yPos, color=AZUL) {
-      doc.setFillColor(...color);
-      doc.roundedRect(ML, yPos, CW, 7, 1.5, 1.5, 'F');
-      setFont('bold', 9);
-      doc.setTextColor(...BRANCO);
-      doc.text(label.toUpperCase(), ML + 4, yPos + 4.8);
-      doc.setTextColor(...PRETO);
-      return yPos + 10;
-    }
+    /* ── TÍTULO ── */
+    printLine('DADOS PARA INCLUSÃO NO MAPA CIRÚRGICO', true, 18);
+    blankLine(3);
 
-    function rowField(label, value, xOff, yPos, w) {
-      setFont('bold', 7.5);
-      doc.setTextColor(...CINZA_TX);
-      doc.text(label.toUpperCase(), xOff, yPos);
-      setFont('normal', 9.5);
-      doc.setTextColor(...PRETO);
-      const lines = doc.splitTextToSize(value || '—', w - 2);
-      doc.text(lines, xOff, yPos + 4.5);
-      return yPos + 4.5 + (lines.length - 1) * 4;
-    }
+    /* ── CAMPOS DE IDENTIFICAÇÃO ── */
+    printLine(`PROFISSIONAL RESPONSÁVEL PELA ENTREGA DO FORMULÁRIO: ${v.responsavel}`, false, 10);
+    printLine(`DATA PARA O AGENDAMENTO: ${v.data}`, false, 10);
+    printLine(`HORÁRIO DO AGENDAMENTO NO CENTRO CIRÚRGICO: ${v.horario}`, false, 10);
+    printLine(`SALA CIRÚRGICA PARA AGENDAMENTO: ${v.sala}`, false, 10);
+    printLine(`TEMPO APROXIMADO DO PROCEDIMENTO: ${v.tempo}`, false, 10);
+    printLine(`NOME E CRM DO MÉDICO QUE FARÁ A ABORDAGEM: ${v.medicoCRM}`, false, 10);
 
-    function fieldBox(label, value, x, y, w, h=14) {
-      doc.setFillColor(...CINZA_BG);
-      doc.setDrawColor(...CINZA_BD); doc.setLineWidth(0.25);
-      doc.roundedRect(x, y, w, h, 1.5, 1.5, 'FD');
-      setFont('bold', 7);
-      doc.setTextColor(...CINZA_TX);
-      doc.text(label.toUpperCase(), x+3, y+4);
-      setFont('normal', 9);
-      doc.setTextColor(...PRETO);
-      const lines = doc.splitTextToSize(value||'—', w-6);
-      doc.text(lines, x+3, y+9);
-      return h;
-    }
+    blankLine(5);
 
-    /* -------- CABEÇALHO -------- */
-    doc.setFillColor(...AZUL_ESC);
-    doc.rect(0, 0, PW, 24, 'F');
+    /* ── DADOS DO PACIENTE ── */
+    printLine('DADOS DO PACIENTE', true, 14);
+    printLine(`NOME COMPLETO: ${v.paciente}`, false, 10);
+    printLine(`DATA DE NASCIMENTO: ${v.nasc || 'NÃO INFORMADO'}`, false, 10);
+    printLine(`CONVÊNIO: ${v.convenio}`, false, 10);
+    printLine(`CPF: ${v.cpf || 'NÃO INFORMADO'}`, false, 10);
+    printLine(`ORIGEM DO PACIENTE: ${v.origem || 'NÃO INFORMADO'}`, false, 10);
 
-    // Banda verde Hapvida
-    doc.setFillColor(0, 164, 112);
-    doc.rect(0, 24, PW, 2.5, 'F');
+    blankLine(5);
 
-    setFont('bold', 15);
-    doc.setTextColor(...BRANCO);
-    doc.text('AVISO CIRÚRGICO', ML, 11);
+    /* ── INFORMAÇÕES COMPLEMENTARES ── */
+    printLine('INFORMAÇÕES COMPLEMENTARES', true, 14);
+    printLine(linhaSangue,  false, 10);
+    printLine(linhaUTI,     false, 10);
+    printLine(`OPMES NECESSÁRIOS: ${v.opme}`, true, 10);
+    if (v.equip) printLine(`EQUIPAMENTOS NECESSÁRIOS: ${v.equip}`, false, 10);
+    printLine(`NOME E CÓDIGO DO PROCEDIMENTO: ${procCompleto}`, false, 10);
+    printLine(linhaLat,   false, 10);
+    printLine(linhaAnest, false, 10);
 
-    setFont('normal', 8);
-    doc.text('Hospital Paulo Sacramento · Hapvida NotreDame Intermédica · Jundiaí, SP', ML, 17);
+    blankLine(5);
 
-    // Data/hora geração
-    const now = new Date();
-    const dtGer = `Gerado em ${now.toLocaleDateString('pt-BR')} às ${now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
-    setFont('normal', 7.5);
-    doc.setTextColor(180, 210, 240);
-    doc.text(dtGer, PW - MR, 20, { align: 'right' });
-    doc.setTextColor(...PRETO);
+    /* ── PREENCHIMENTO PELA RECEPÇÃO ── */
+    printLine('PREENCHIMENTO PELA RECEPÇÃO', true, 14);
+    printLine('CIENTE NO CC:                                                                                  HORÁRIO:', false, 10);
+    printLine('HORÁRIO DE RECEBIMENTO DO FORMULÁRIO:', false, 10);
 
-    Y = 32;
-
-    /* -------- IDENTIFICAÇÃO -------- */
-    Y = sectionHeader('📋  Identificação do Procedimento', Y);
-    const halfW = (CW - 4) / 2;
-    const thirdW = (CW - 8) / 3;
-
-    // Row 1: profissional | data | hora
-    fieldBox('Profissional Responsável', profissional, ML, Y, halfW);
-    fieldBox('Data Agendamento', fmtData(dataAg), ML + halfW + 4, Y, thirdW - 4 + halfW/3);
-    fieldBox('Horário CC', fmtHora(horarioCC), ML + halfW + 4 + thirdW - 4 + halfW/3 + 4, Y, CW - halfW - 4 - (thirdW - 4 + halfW/3) - 4);
-    Y += 17;
-
-    // Row 2: sala | tempo | CRM
-    const sala = document.getElementById('ac-sala').value.trim();
-    const tempo = document.getElementById('ac-tempo').value.trim();
-    const crm   = document.getElementById('ac-crm').value.trim();
-    fieldBox('Sala Cirúrgica', sala, ML, Y, thirdW);
-    fieldBox('Tempo Previsto', tempo, ML + thirdW + 4, Y, thirdW);
-    fieldBox('CRM do Médico', crm, ML + thirdW*2 + 8, Y, thirdW);
-    Y += 17;
-
-    /* -------- DADOS DO PACIENTE -------- */
-    Y = sectionHeader('👤  Dados do Paciente', Y);
-
-    const nasc     = document.getElementById('ac-nasc').value;
-    const cpf      = document.getElementById('ac-cpf').value.trim();
-    const origem   = document.getElementById('ac-origem').value.trim();
-
-    fieldBox('Nome do Paciente', paciente, ML, Y, CW);
-    Y += 17;
-    fieldBox('Data de Nascimento', fmtData(nasc), ML, Y, thirdW);
-    fieldBox('CPF', cpf, ML + thirdW + 4, Y, thirdW);
-    fieldBox('Convênio', convenio, ML + thirdW*2 + 8, Y, thirdW);
-    Y += 17;
-    fieldBox('Origem / Procedência', origem, ML, Y, CW);
-    Y += 17;
-
-    /* -------- PROCEDIMENTO -------- */
-    Y = sectionHeader('🔪  Procedimento Cirúrgico', Y);
-
-    const tuss   = document.getElementById('ac-tuss').value.trim();
-    const cid    = document.getElementById('ac-diagnostico').value.trim();
-    const lateral = radioVal('lateralidade');
-
-    fieldBox('Nome do Procedimento', procNome, ML, Y, CW);
-    Y += 17;
-    fieldBox('Código TUSS', tuss, ML, Y, thirdW);
-    fieldBox('Diagnóstico / CID', cid, ML + thirdW + 4, Y, thirdW*2 + 4);
-    Y += 17;
-
-    // Lateralidade + Anestesia em destaque
-    doc.setFillColor(235, 245, 255);
-    doc.setDrawColor(...AZUL);
-    doc.setLineWidth(0.4);
-    doc.roundedRect(ML, Y, CW/2 - 2, 14, 2, 2, 'FD');
-    setFont('bold', 7.5); doc.setTextColor(...CINZA_TX);
-    doc.text('LATERALIDADE', ML+3, Y+4.5);
-    setFont('bold', 10); doc.setTextColor(...AZUL_ESC);
-    doc.text(lateral, ML + 3, Y+10.5);
-
-    doc.roundedRect(ML + CW/2 + 2, Y, CW/2 - 2, 14, 2, 2, 'FD');
-    setFont('bold', 7.5); doc.setTextColor(...CINZA_TX);
-    doc.text('TIPO DE ANESTESIA', ML + CW/2 + 5, Y+4.5);
-    setFont('bold', 10); doc.setTextColor(...AZUL_ESC);
-    doc.text(anestesia, ML + CW/2 + 5, Y+10.5);
-    doc.setTextColor(...PRETO);
-    Y += 18;
-
-    /* -------- RESERVAS -------- */
-    const temSangue = document.getElementById('ac-sangue-check').checked;
-    const temUTI    = document.getElementById('ac-uti-check').checked;
-
-    Y = sectionHeader('🩸  Reservas', Y);
-
-    // Sangue
-    if (temSangue) { doc.setFillColor(255,240,242); doc.setDrawColor(239,68,68); }
-    else           { doc.setFillColor(...CINZA_BG); doc.setDrawColor(...CINZA_BD); }
-    doc.setLineWidth(0.3);
-    doc.roundedRect(ML, Y, CW/2 - 2, 14, 2, 2, 'FD');
-    setFont('bold', 7.5);
-    doc.setTextColor(...(temSangue ? [180,0,0] : CINZA_TX));
-    doc.text('RESERVA DE SANGUE', ML+3, Y+4.5);
-    setFont('bold', 9.5);
-    doc.setTextColor(...(temSangue ? [180,0,0] : PRETO));
-    if (temSangue) {
-      const qtd  = document.getElementById('ac-sangue-qtd').value;
-      const tipo = document.getElementById('ac-sangue-tipo').value;
-      const hemo = document.getElementById('ac-sangue-hemo').value;
-      doc.text(`SIM - ${qtd} bolsa(s)  ${tipo || ''}  ${hemo}`, ML+3, Y+10.5);
-    } else {
-      doc.text('Nao solicitada', ML+3, Y+10.5);
-    }
-
-    // UTI
-    if (temUTI) { doc.setFillColor(240,249,255); doc.setDrawColor(...AZUL); }
-    else        { doc.setFillColor(...CINZA_BG);  doc.setDrawColor(...CINZA_BD); }
-    doc.roundedRect(ML + CW/2 + 2, Y, CW/2 - 2, 14, 2, 2, 'FD');
-    setFont('bold', 7.5);
-    doc.setTextColor(...(temUTI ? AZUL : CINZA_TX));
-    doc.text('RESERVA DE UTI', ML + CW/2 + 5, Y+4.5);
-    setFont('bold', 9.5);
-    doc.setTextColor(...(temUTI ? AZUL_ESC : PRETO));
-    if (temUTI) {
-      const tipoUTI = document.getElementById('ac-uti-tipo').value;
-      doc.text(`SIM - ${tipoUTI}`, ML + CW/2 + 5, Y+10.5);
-    } else {
-      doc.text('Nao solicitada', ML + CW/2 + 5, Y+10.5);
-    }
-    doc.setTextColor(...PRETO);
-    Y += 18;
-
-    /* -------- OPME / EQUIPAMENTOS -------- */
-    const opme  = document.getElementById('ac-opme').value.trim();
-    const equip = document.getElementById('ac-equipamentos').value.trim();
-
-    if (opme || equip) {
-      Y = sectionHeader('🔧  OPME e Equipamentos', Y);
-
-      if (opme) {
-        doc.setFillColor(...CINZA_BG);
-        doc.setDrawColor(...CINZA_BD); doc.setLineWidth(0.25);
-        const opmeLines = doc.splitTextToSize(opme, CW - 6);
-        const opmeH = Math.max(14, opmeLines.length * 4.5 + 7);
-        doc.roundedRect(ML, Y, CW, opmeH, 2, 2, 'FD');
-        setFont('bold', 7); doc.setTextColor(...CINZA_TX);
-        doc.text('OPME', ML+3, Y+4);
-        setFont('normal', 9); doc.setTextColor(...PRETO);
-        doc.text(opmeLines, ML+3, Y+8.5);
-        Y += opmeH + 4;
-      }
-
-      if (equip) {
-        doc.setFillColor(...CINZA_BG);
-        doc.setDrawColor(...CINZA_BD); doc.setLineWidth(0.25);
-        const equipLines = doc.splitTextToSize(equip, CW - 6);
-        const equipH = Math.max(14, equipLines.length * 4.5 + 7);
-        doc.roundedRect(ML, Y, CW, equipH, 2, 2, 'FD');
-        setFont('bold', 7); doc.setTextColor(...CINZA_TX);
-        doc.text('EQUIPAMENTOS / MATERIAIS', ML+3, Y+4);
-        setFont('normal', 9); doc.setTextColor(...PRETO);
-        doc.text(equipLines, ML+3, Y+8.5);
-        Y += equipH + 4;
-      }
-    }
-
-    /* -------- OBSERVAÇÕES -------- */
-    const obs = document.getElementById('ac-obs').value.trim();
-    if (obs) {
-      Y = sectionHeader('📝  Observações', Y);
-      doc.setFillColor(255, 251, 230);
-      doc.setDrawColor(220, 180, 0); doc.setLineWidth(0.3);
-      const obsLines = doc.splitTextToSize(obs, CW - 6);
-      const obsH = Math.max(16, obsLines.length * 4.5 + 9);
-      doc.roundedRect(ML, Y, CW, obsH, 2, 2, 'FD');
-      setFont('normal', 9); doc.setTextColor(...PRETO);
-      doc.text(obsLines, ML+3, Y+7);
-      Y += obsH + 4;
-    }
-
-    /* -------- RECEPÇÃO CC (espaço para preenchimento manual) -------- */
-    // Nova página se < 60mm restantes
-    if (Y > 250) { doc.addPage(); Y = 14; }
-
-    Y = sectionHeader('📥  Uso Exclusivo do Centro Cirúrgico (preencher à mão)', Y, [100, 120, 145]);
-
-    // 6 linhas em branco
-    const lineLabels = ['Recebido por:', 'Data/Hora Recepção:', 'Prontuário / Registro:', 'Materiais Conferidos:', 'Equipe Cirúrgica:', 'Observações CC:'];
-    lineLabels.forEach(lbl => {
-      doc.setFillColor(...CINZA_BG);
-      doc.setDrawColor(...CINZA_BD); doc.setLineWidth(0.25);
-      doc.roundedRect(ML, Y, CW, 12, 1.5, 1.5, 'FD');
-      setFont('bold', 7.5); doc.setTextColor(...CINZA_TX);
-      doc.text(lbl.toUpperCase(), ML+3, Y+4.5);
-      // linha pontilhada para escrever
-      doc.setDrawColor(180, 190, 200); doc.setLineWidth(0.3);
-      doc.setLineDash([1, 1.5], 0);
-      doc.line(ML+3, Y+9.5, ML + CW - 3, Y+9.5);
-      doc.setLineDash([], 0);
-      Y += 15;
-    });
-
-    /* -------- ASSINATURAS -------- */
-    Y += 6;
-    if (Y > 260) { doc.addPage(); Y = 14; }
-    hLine(Y, CINZA_BD); Y += 8;
-
-    const sigW = (CW - 8) / 2;
-    // Linha de assinatura médico
-    doc.setDrawColor(...CINZA_BD); doc.setLineWidth(0.4);
-    doc.line(ML, Y, ML + sigW, Y);
-    setFont('normal', 8); doc.setTextColor(...CINZA_TX);
-    doc.text('Assinatura do Médico Solicitante', ML + sigW/2, Y+5, { align:'center' });
-    doc.text(profissional || 'Médico Solicitante', ML + sigW/2, Y+9.5, { align:'center' });
-    if (crm) doc.text('CRM: ' + crm, ML + sigW/2, Y+13.5, { align:'center' });
-
-    // Linha de assinatura CC
-    doc.line(ML + sigW + 8, Y, ML + CW, Y);
-    doc.text('Recebido pelo Centro Cirúrgico', ML + sigW + 8 + sigW/2, Y+5, { align:'center' });
-
-    doc.setTextColor(...PRETO);
-    Y += 20;
-
-    /* -------- RODAPÉ -------- */
-    const totalPages = doc.internal.getNumberOfPages();
-    for (let i=1; i<=totalPages; i++) {
-      doc.setPage(i);
-      doc.setFillColor(29, 60, 100);
-      doc.rect(0, 290, PW, 8, 'F');
-      setFont('normal', 7); doc.setTextColor(180, 210, 240);
-      doc.text('Hospital Paulo Sacramento · Hapvida NotreDame Intermédica · Jundiaí, SP · www.hapvida.com.br', PW/2, 294.5, { align:'center' });
-      doc.setTextColor(150,180,210);
-      doc.text(`Página ${i} de ${totalPages}`, PW - MR, 294.5, { align:'right' });
-    }
-
-    /* -------- SALVAR -------- */
-    const nomeArq = `aviso-cirurgico_${paciente.replace(/\s+/g,'-').toLowerCase()}_${fmtData(dataAg).replace(/\//g,'')}.pdf`;
-    doc.save(nomeArq);
+    /* ── Salva ── */
+    const nome = v.paciente.replace(/\s+/g,'-').toLowerCase();
+    const data = v.data.replace(/\//g,'');
+    doc.save(`aviso-cirurgico_${nome}_${data}.pdf`);
   }
   </script>
 </body>
