@@ -7,75 +7,75 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231D71B8'/><text y='24' x='4' font-size='22' font-family='Arial'>🏥</text></svg>">
   <style>
-    .ac-page { max-width: 760px; margin: 0 auto; padding: 0 16px 60px; }
+    .ac-wrap  { max-width: 780px; margin: 0 auto; padding: 0 16px 64px; }
 
-    .ac-card {
+    /* ── Cards de seção ── */
+    .ac-card  {
       background: #fff;
-      border: 1.5px solid var(--cinza-borda, #e5e7eb);
+      border: 1.5px solid var(--cinza-borda,#e5e7eb);
       border-radius: 12px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       overflow: hidden;
     }
-    .ac-card-header {
-      background: var(--azul, #1D71B8);
-      color: #fff;
-      padding: 11px 20px;
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: .05em;
-      text-transform: uppercase;
+    .ac-card-hd {
+      background: var(--azul,#1D71B8); color: #fff;
+      padding: 10px 20px;
+      font-weight: 700; font-size: 12.5px;
+      letter-spacing: .05em; text-transform: uppercase;
     }
-    .ac-card-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+    .ac-card-bd { padding: 18px 20px; display: flex; flex-direction: column; gap: 13px; }
 
-    .ac-field { display: flex; flex-direction: column; gap: 5px; }
-    .ac-field label {
+    /* ── Campos ── */
+    .ac-f { display: flex; flex-direction: column; gap: 4px; }
+    .ac-f label {
       font-size: 11px; font-weight: 700;
-      color: var(--cinza-texto, #6b7280);
+      color: var(--cinza-texto,#6b7280);
       text-transform: uppercase; letter-spacing: .05em;
     }
-    .ac-field input, .ac-field select, .ac-field textarea {
+    .ac-f input, .ac-f select, .ac-f textarea {
       padding: 9px 12px;
-      border: 1.5px solid var(--cinza-borda, #e5e7eb);
-      border-radius: 8px;
+      border: 1.5px solid var(--cinza-borda,#e5e7eb); border-radius: 8px;
       font-size: 14px; font-family: inherit;
-      background: #fff; color: var(--texto-escuro, #111827);
+      background: #fff; color: var(--texto-escuro,#111827);
       transition: border-color .2s, box-shadow .2s;
     }
-    .ac-field input:focus, .ac-field select:focus, .ac-field textarea:focus {
+    .ac-f input:focus, .ac-f select:focus, .ac-f textarea:focus {
       outline: none;
-      border-color: var(--azul, #1D71B8);
+      border-color: var(--azul,#1D71B8);
       box-shadow: 0 0 0 3px rgba(29,113,184,.12);
     }
-    .ac-field textarea { resize: vertical; min-height: 68px; }
-    .ac-field .hint { font-size: 11px; color: var(--cinza-texto,#6b7280); margin-top: 2px; }
+    .ac-f textarea { resize: vertical; min-height: 66px; }
+    .ac-f .hint { font-size: 11px; color: var(--cinza-texto,#6b7280); }
 
-    .ac-row { display: grid; gap: 14px; }
-    .ac-row-2 { grid-template-columns: repeat(2, 1fr); }
-    .ac-row-3 { grid-template-columns: repeat(3, 1fr); }
-    @media (max-width:560px) { .ac-row-2, .ac-row-3 { grid-template-columns: 1fr; } }
+    /* ── Grids ── */
+    .ac-g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+    .ac-g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
+    @media (max-width: 560px) { .ac-g2, .ac-g3 { grid-template-columns: 1fr; } }
 
-    .ac-radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
-    .ac-radio-group label {
-      display: flex; align-items: center; gap: 6px; cursor: pointer;
-      padding: 7px 14px; border: 1.5px solid var(--cinza-borda,#e5e7eb);
+    /* ── Radios / checkboxes ── */
+    .ac-radios { display: flex; flex-wrap: wrap; gap: 7px; }
+    .ac-radios label {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 13px; border: 1.5px solid var(--cinza-borda,#e5e7eb);
       border-radius: 8px; font-size: 14px; font-weight: 400;
-      text-transform: none; letter-spacing: normal;
+      text-transform: none; letter-spacing: normal; cursor: pointer;
       color: var(--texto-escuro,#111827); transition: border-color .15s, background .15s;
       user-select: none;
     }
-    .ac-radio-group input[type=radio] { accent-color: var(--azul,#1D71B8); }
-    .ac-radio-group label:has(input:checked) {
+    .ac-radios input { accent-color: var(--azul,#1D71B8); }
+    .ac-radios label:has(input:checked) {
       border-color: var(--azul,#1D71B8);
       background: rgba(29,113,184,.07);
     }
+    .ac-chk { display: flex; align-items: center; gap: 9px; }
+    .ac-chk input { width: 18px; height: 18px; accent-color: var(--azul,#1D71B8); cursor: pointer; flex-shrink: 0; }
+    .ac-chk span  { font-size: 14px; font-weight: 600; cursor: pointer; }
 
-    .ac-toggle { display: flex; align-items: center; gap: 10px; }
-    .ac-toggle input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--azul,#1D71B8); cursor: pointer; flex-shrink: 0; }
-    .ac-toggle span { font-size: 14px; font-weight: 600; cursor: pointer; }
+    /* ── Sub-campo condicional ── */
+    .ac-sub { display: none; }
+    .ac-sub.on { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; }
 
-    .ac-sub { display: none; padding-top: 4px; }
-    .ac-sub.visible { display: flex; flex-direction: column; gap: 12px; }
-
+    /* ── Ações ── */
     .ac-actions { display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap; padding-bottom: 8px; }
     .btn-gerar {
       padding: 12px 28px; background: var(--azul,#1D71B8); color: #fff;
@@ -83,6 +83,7 @@
       cursor: pointer; font-family: inherit; transition: background .2s;
     }
     .btn-gerar:hover { background: #155d96; }
+    .btn-gerar:disabled { opacity: .6; cursor: not-allowed; }
     .btn-limpar {
       padding: 12px 20px; background: none; color: var(--cinza-texto,#6b7280);
       border: 1.5px solid var(--cinza-borda,#e5e7eb); border-radius: 8px;
@@ -90,21 +91,21 @@
     }
     .btn-limpar:hover { border-color: #aaa; }
 
-    .ac-required { color: #ef4444; margin-left: 2px; }
-    .ac-banner {
+    .ac-req { color: #ef4444; margin-left: 1px; }
+    .ac-info {
       background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px;
-      padding: 11px 16px; font-size: 13px; color: #1e40af; margin-bottom: 18px;
+      padding: 11px 16px; font-size: 13px; color: #1e40af; margin-bottom: 16px;
     }
 
     @media (prefers-color-scheme: dark) {
       .ac-card { background: #1e2028; border-color: #2d3145; }
-      .ac-field input, .ac-field select, .ac-field textarea { background: #2a2d3e; border-color: #3a3d55; color: #e8eaf6; }
-      .ac-radio-group label { border-color: #3a3d55; color: #e8eaf6; }
+      .ac-f input, .ac-f select, .ac-f textarea { background: #2a2d3e; border-color: #3a3d55; color: #e8eaf6; }
+      .ac-radios label { border-color: #3a3d55; color: #e8eaf6; }
     }
-    :root[data-theme="dark"] .ac-card { background: #1e2028; border-color: #2d3145; }
-    :root[data-theme="dark"] .ac-field input,
-    :root[data-theme="dark"] .ac-field select,
-    :root[data-theme="dark"] .ac-field textarea { background: #2a2d3e; border-color: #3a3d55; color: #e8eaf6; }
+    :root[data-theme="dark"]  .ac-card { background: #1e2028; border-color: #2d3145; }
+    :root[data-theme="dark"]  .ac-f input,
+    :root[data-theme="dark"]  .ac-f select,
+    :root[data-theme="dark"]  .ac-f textarea { background: #2a2d3e; border-color: #3a3d55; color: #e8eaf6; }
     :root[data-theme="light"] .ac-card { background: #fff; }
   </style>
 </head>
@@ -128,83 +129,85 @@
 
   <div class="breadcrumb-bar">
     <nav class="breadcrumb">
-      <a href="index.html">Início</a>
-      <span class="sep">›</span>
-      <a href="setor.html?slug=centro-cirurgico">Centro Cirúrgico</a>
-      <span class="sep">›</span>
+      <a href="index.html">Início</a><span class="sep">›</span>
+      <a href="setor.html?slug=centro-cirurgico">Centro Cirúrgico</a><span class="sep">›</span>
       <span>Aviso Cirúrgico</span>
     </nav>
   </div>
 
-  <section class="hero" style="padding:26px 24px">
-    <div class="hero-inner" style="display:flex;align-items:center;gap:16px">
-      <div style="font-size:42px;flex-shrink:0">🔪</div>
+  <section class="hero" style="padding:24px">
+    <div class="hero-inner" style="display:flex;align-items:center;gap:14px">
+      <div style="font-size:40px;flex-shrink:0">🔪</div>
       <div>
-        <h1 style="font-size:clamp(18px,3vw,24px)">Aviso Cirúrgico</h1>
-        <p style="margin:0">Preencha o formulário e gere o PDF institucional para entrega ao Centro Cirúrgico.</p>
+        <h1 style="font-size:clamp(17px,3vw,23px)">Aviso Cirúrgico</h1>
+        <p style="margin:0">Preencha e gere o PDF institucional para entrega ao Centro Cirúrgico.</p>
       </div>
     </div>
   </section>
 
-  <main class="ac-page">
-
-    <div class="ac-banner">
-      ℹ️ Após preencher os campos obrigatórios (<span class="ac-required">*</span>), clique em <strong>Gerar PDF</strong>.
-      O documento gerado é uma cópia fiel do formulário institucional, pronto para impressão.
+  <main class="ac-wrap">
+    <div class="ac-info">
+      ℹ️ Preencha os campos marcados com <span class="ac-req">*</span> e clique em <strong>Gerar PDF</strong>.
+      O documento gerado reproduz fielmente o formulário institucional com bordas, logo e tabela completa.
     </div>
 
-    <!-- ── SEÇÃO 1: DADOS PARA INCLUSÃO NO MAPA ── -->
+    <!-- ── 1. MAPA CIRÚRGICO ── -->
     <div class="ac-card">
-      <div class="ac-card-header">📋 Dados para Inclusão no Mapa Cirúrgico</div>
-      <div class="ac-card-body">
-        <div class="ac-field">
-          <label>Profissional responsável pela entrega do formulário <span class="ac-required">*</span></label>
-          <input type="text" id="f-responsavel" placeholder="Ex: Dra. Maria Silva" autocomplete="off">
+      <div class="ac-card-hd">📋 Dados para Inclusão no Mapa Cirúrgico</div>
+      <div class="ac-card-bd">
+
+        <div class="ac-f">
+          <label>Profissional responsável pela entrega do formulário <span class="ac-req">*</span></label>
+          <input type="text" id="f-resp" placeholder="Ex: Dra. Maria Silva" autocomplete="off">
         </div>
-        <div class="ac-row ac-row-3">
-          <div class="ac-field">
-            <label>Data para o agendamento <span class="ac-required">*</span></label>
+
+        <div class="ac-g3">
+          <div class="ac-f">
+            <label>Data do agendamento <span class="ac-req">*</span></label>
             <input type="date" id="f-data">
           </div>
-          <div class="ac-field">
-            <label>Horário no Centro Cirúrgico <span class="ac-required">*</span></label>
-            <input type="time" id="f-horario">
+          <div class="ac-f">
+            <label>Horário no CC <span class="ac-req">*</span></label>
+            <input type="time" id="f-hora">
           </div>
-          <div class="ac-field">
+          <div class="ac-f">
             <label>Sala cirúrgica</label>
             <input type="text" id="f-sala" placeholder="Ex: Sala 2 / A DEFINIR">
           </div>
         </div>
-        <div class="ac-row ac-row-2">
-          <div class="ac-field">
+
+        <div class="ac-g2">
+          <div class="ac-f">
             <label>Tempo aproximado do procedimento</label>
             <input type="text" id="f-tempo" placeholder="Ex: 1 hora 30 min / A DEFINIR">
           </div>
-          <div class="ac-field">
-            <label>Nome e CRM do médico que fará a abordagem <span class="ac-required">*</span></label>
-            <input type="text" id="f-medico-crm" placeholder="Ex: Dr. Vitor Mercante - CRM 168.254">
-            <span class="hint">Informe nome e CRM juntos, como aparecerá no documento</span>
+          <div class="ac-f">
+            <label>Nome e CRM do médico que fará a abordagem <span class="ac-req">*</span></label>
+            <input type="text" id="f-medico" placeholder="Ex: Dr. Vitor Mercante - CRM 168.254">
           </div>
         </div>
+
       </div>
     </div>
 
-    <!-- ── SEÇÃO 2: DADOS DO PACIENTE ── -->
+    <!-- ── 2. DADOS DO PACIENTE ── -->
     <div class="ac-card">
-      <div class="ac-card-header">👤 Dados do Paciente</div>
-      <div class="ac-card-body">
-        <div class="ac-field">
-          <label>Nome completo <span class="ac-required">*</span></label>
-          <input type="text" id="f-paciente" placeholder="Nome completo do paciente" autocomplete="off">
+      <div class="ac-card-hd">👤 Dados do Paciente</div>
+      <div class="ac-card-bd">
+
+        <div class="ac-f">
+          <label>Nome completo <span class="ac-req">*</span></label>
+          <input type="text" id="f-pac" placeholder="Nome completo do paciente" autocomplete="off">
         </div>
-        <div class="ac-row ac-row-3">
-          <div class="ac-field">
+
+        <div class="ac-g3">
+          <div class="ac-f">
             <label>Data de nascimento</label>
             <input type="date" id="f-nasc">
           </div>
-          <div class="ac-field">
-            <label>Convênio <span class="ac-required">*</span></label>
-            <select id="f-convenio">
+          <div class="ac-f">
+            <label>Convênio <span class="ac-req">*</span></label>
+            <select id="f-conv">
               <option value="">Selecione…</option>
               <option>HAPVIDA</option>
               <option>NOTRE</option>
@@ -214,82 +217,83 @@
               <option>OUTRO</option>
             </select>
           </div>
-          <div class="ac-field">
+          <div class="ac-f">
             <label>CPF</label>
             <input type="text" id="f-cpf" placeholder="000.000.000-00" maxlength="14">
           </div>
         </div>
-        <div class="ac-field">
+
+        <div class="ac-f">
           <label>Origem do paciente</label>
-          <input type="text" id="f-origem" placeholder="Ex: PRONTO SOCORRO">
+          <input type="text" id="f-orig" placeholder="Ex: PRONTO SOCORRO">
         </div>
+
       </div>
     </div>
 
-    <!-- ── SEÇÃO 3: INFORMAÇÕES COMPLEMENTARES ── -->
+    <!-- ── 3. INFORMAÇÕES COMPLEMENTARES ── -->
     <div class="ac-card">
-      <div class="ac-card-header">ℹ️ Informações Complementares</div>
-      <div class="ac-card-body">
+      <div class="ac-card-hd">ℹ️ Informações Complementares</div>
+      <div class="ac-card-bd">
 
-        <!-- Reserva sangue -->
-        <div class="ac-field">
+        <!-- Sangue -->
+        <div class="ac-f">
           <label>Necessidade de reserva de sangue</label>
-          <div class="ac-toggle">
-            <input type="checkbox" id="f-sangue-sim">
+          <div class="ac-chk">
+            <input type="checkbox" id="f-sang-chk">
             <span>Solicitar reserva de sangue (SIM)</span>
           </div>
-          <div class="ac-sub" id="f-sangue-sub">
-            <div class="ac-row ac-row-2">
-              <div class="ac-field">
+          <div class="ac-sub" id="f-sang-sub">
+            <div class="ac-g2">
+              <div class="ac-f">
                 <label>Quantidade (bolsas)</label>
-                <input type="number" id="f-sangue-qtd" min="1" max="99" value="2">
+                <input type="number" id="f-sang-qtd" min="1" max="99" value="2">
               </div>
-              <div class="ac-field">
+              <div class="ac-f">
                 <label>Qual (hemocomponente / tipo)</label>
-                <input type="text" id="f-sangue-qual" placeholder="Ex: Concentrado de Hemácias / O+">
+                <input type="text" id="f-sang-qual" placeholder="Ex: Concentrado de Hemácias / O+">
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Reserva UTI -->
-        <div class="ac-field">
+        <!-- UTI -->
+        <div class="ac-f">
           <label>Necessidade de reserva de UTI</label>
-          <div class="ac-toggle">
-            <input type="checkbox" id="f-uti-sim">
+          <div class="ac-chk">
+            <input type="checkbox" id="f-uti-chk">
             <span>Solicitar leito de UTI pós-operatório (SIM)</span>
           </div>
         </div>
 
         <!-- OPMES -->
-        <div class="ac-field">
+        <div class="ac-f">
           <label>OPMES necessários</label>
-          <textarea id="f-opme" placeholder="Ex: CLIP METÁLICO LT 300 E LT 400&#10;2 KITS DE DVE, 01 BROCA - 31401082&#10;(deixe em branco se não houver)"></textarea>
+          <textarea id="f-opme" placeholder="Liste os materiais necessários ou informe: SEM NECESSIDADE"></textarea>
         </div>
 
         <!-- Equipamentos -->
-        <div class="ac-field">
+        <div class="ac-f">
           <label>Equipamentos necessários</label>
           <textarea id="f-equip" placeholder="Ex: RACK VIDEOCIRURGIA + CAIXA VLP&#10;(deixe em branco se não houver)"></textarea>
         </div>
 
         <!-- Procedimento -->
-        <div class="ac-row ac-row-2">
-          <div class="ac-field">
-            <label>Nome do procedimento <span class="ac-required">*</span></label>
-            <input type="text" id="f-proc-nome" placeholder="Ex: COLECISTECTOMIA VIDEOLAPAROSCÓPICA">
+        <div class="ac-g2">
+          <div class="ac-f">
+            <label>Nome do procedimento <span class="ac-req">*</span></label>
+            <input type="text" id="f-proc" placeholder="Ex: COLECISTECTOMIA VIDEOLAPAROSCÓPICA">
           </div>
-          <div class="ac-field">
-            <label>Código TUSS (opcional)</label>
-            <input type="text" id="f-proc-cod" placeholder="Ex: 31005101">
-            <span class="hint">Será exibido após "///" no documento</span>
+          <div class="ac-f">
+            <label>Código TUSS <span class="ac-req">*</span></label>
+            <input type="text" id="f-tuss" placeholder="Ex: 31005101">
           </div>
         </div>
 
         <!-- Lateralidade -->
-        <div class="ac-field">
+        <div class="ac-f">
           <label>Lado que será operado (lateralidade)</label>
-          <div class="ac-radio-group">
+          <div class="ac-radios">
             <label><input type="radio" name="lat" value="DIREITA"> Direita</label>
             <label><input type="radio" name="lat" value="ESQUERDA"> Esquerda</label>
             <label><input type="radio" name="lat" value="BILATERAL"> Bilateral</label>
@@ -298,9 +302,9 @@
         </div>
 
         <!-- Anestesia -->
-        <div class="ac-field">
-          <label>Tipo de anestesia <span class="ac-required">*</span></label>
-          <div class="ac-radio-group">
+        <div class="ac-f">
+          <label>Tipo de anestesia <span class="ac-req">*</span></label>
+          <div class="ac-radios">
             <label><input type="radio" name="anest" value="GERAL" checked> Geral</label>
             <label><input type="radio" name="anest" value="RAQUI + SEDAÇÃO"> Raqui + Sedação</label>
             <label><input type="radio" name="anest" value="LOCAL"> Local</label>
@@ -310,12 +314,10 @@
       </div>
     </div>
 
-    <!-- Ações -->
     <div class="ac-actions">
-      <button class="btn-limpar" type="button" onclick="limpar()">Limpar formulário</button>
-      <button class="btn-gerar"  type="button" onclick="gerarPDF()">📄 Gerar PDF</button>
+      <button class="btn-limpar" onclick="limpar()">Limpar formulário</button>
+      <button class="btn-gerar"  id="btn-gerar" onclick="gerarPDF()">📄 Gerar PDF</button>
     </div>
-
   </main>
 
   <footer class="site-footer">
@@ -325,167 +327,324 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
 
-  /* ── Toggles ─────────────────────────────────── */
-  document.getElementById('f-sangue-sim').addEventListener('change', function () {
-    document.getElementById('f-sangue-sub').classList.toggle('visible', this.checked);
+  /* ──────────────── TOGGLES ──────────────── */
+  document.getElementById('f-sang-chk').addEventListener('change', function() {
+    document.getElementById('f-sang-sub').classList.toggle('on', this.checked);
   });
 
-  /* ── Máscara CPF ─────────────────────────────── */
-  document.getElementById('f-cpf').addEventListener('input', function () {
+  /* ──────────────── CPF MASK ──────────────── */
+  document.getElementById('f-cpf').addEventListener('input', function() {
     let v = this.value.replace(/\D/g,'').slice(0,11);
     v = v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
     this.value = v;
   });
 
-  function radioVal(name) {
-    return document.querySelector(`input[name="${name}"]:checked`)?.value || '';
-  }
+  /* ──────────────── HELPERS ──────────────── */
+  const rval = n => document.querySelector(`input[name="${n}"]:checked`)?.value || '';
+  const gval = id => document.getElementById(id)?.value?.trim() || '';
+  const fdt  = s => { if (!s) return ''; const [y,m,d]=s.split('-'); return `${d}/${m}/${y}`; };
+  const chk  = ok => ok ? '( X )' : '(    )';
 
-  function fmtData(str) {
-    if (!str) return '';
-    const [y,m,d] = str.split('-');
-    return `${d}/${m}/${y}`;
-  }
-
-  /* ── Limpar ──────────────────────────────────── */
+  /* ──────────────── LIMPAR ──────────────── */
   function limpar() {
     if (!confirm('Limpar todos os campos?')) return;
-    document.querySelectorAll('.ac-page input:not([type=radio]):not([type=checkbox]), .ac-page select, .ac-page textarea')
+    document.querySelectorAll('.ac-wrap input:not([type=radio]):not([type=checkbox]), .ac-wrap select, .ac-wrap textarea')
       .forEach(el => el.value = '');
-    document.querySelector('input[name="lat"][value="NÃO SE APLICA"]').checked = true;
+    document.querySelector('input[name="lat"][value="NÃO SE APLICA"]').checked  = true;
     document.querySelector('input[name="anest"][value="GERAL"]').checked = true;
-    document.getElementById('f-sangue-sim').checked = false;
-    document.getElementById('f-uti-sim').checked = false;
-    document.getElementById('f-sangue-sub').classList.remove('visible');
+    document.getElementById('f-sang-chk').checked = false;
+    document.getElementById('f-uti-chk').checked  = false;
+    document.getElementById('f-sang-sub').classList.remove('on');
   }
 
-  /* ── Geração do PDF ──────────────────────────── */
-  function gerarPDF() {
-    /* Coleta de valores */
-    const v = {
-      responsavel : document.getElementById('f-responsavel').value.trim().toUpperCase(),
-      data        : fmtData(document.getElementById('f-data').value),
-      horario     : document.getElementById('f-horario').value || 'A SEGUIR',
-      sala        : document.getElementById('f-sala').value.trim().toUpperCase()   || 'A DEFINIR',
-      tempo       : document.getElementById('f-tempo').value.trim().toUpperCase()  || 'A DEFINIR',
-      medicoCRM   : document.getElementById('f-medico-crm').value.trim().toUpperCase(),
-      paciente    : document.getElementById('f-paciente').value.trim().toUpperCase(),
-      nasc        : fmtData(document.getElementById('f-nasc').value),
-      convenio    : document.getElementById('f-convenio').value.toUpperCase(),
-      cpf         : document.getElementById('f-cpf').value.trim(),
-      origem      : document.getElementById('f-origem').value.trim().toUpperCase(),
-      sangueSimN  : document.getElementById('f-sangue-sim').checked,
-      sangueQtd   : document.getElementById('f-sangue-qtd').value,
-      sangueQual  : document.getElementById('f-sangue-qual').value.trim().toUpperCase(),
-      utiSim      : document.getElementById('f-uti-sim').checked,
-      opme        : document.getElementById('f-opme').value.trim().toUpperCase()   || 'SEM NECESSIDADE',
-      equip       : document.getElementById('f-equip').value.trim().toUpperCase(),
-      procNome    : document.getElementById('f-proc-nome').value.trim().toUpperCase(),
-      procCod     : document.getElementById('f-proc-cod').value.trim().toUpperCase(),
-      lat         : radioVal('lat'),
-      anest       : radioVal('anest'),
-    };
+  /* ──────────────── LOGO LOADER ──────────────── */
+  let _logoCache = null;
+  function loadLogo() {
+    if (_logoCache) return Promise.resolve(_logoCache);
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const c = document.createElement('canvas');
+          c.width = img.naturalWidth; c.height = img.naturalHeight;
+          c.getContext('2d').drawImage(img, 0, 0);
+          _logoCache = c.toDataURL('image/png');
+          resolve(_logoCache);
+        } catch(e) { resolve(null); }
+      };
+      img.onerror = () => resolve(null);
+      img.src = 'assets/img/hapvida-logo.png';
+    });
+  }
+  // Pre-load logo on page ready
+  loadLogo();
 
-    /* Validação */
-    if (!v.responsavel) { alert('Informe o profissional responsável.'); return; }
-    if (!v.data)        { alert('Informe a data de agendamento.'); return; }
-    if (!v.horario)     { alert('Informe o horário CC.'); return; }
-    if (!v.medicoCRM)   { alert('Informe o nome e CRM do médico.'); return; }
-    if (!v.paciente)    { alert('Informe o nome do paciente.'); return; }
-    if (!v.convenio)    { alert('Selecione o convênio.'); return; }
-    if (!v.procNome)    { alert('Informe o nome do procedimento.'); return; }
+  /* ──────────────── PDF ──────────────── */
+  async function gerarPDF() {
+    /* ── Coleta valores ── */
+    const resp   = gval('f-resp').toUpperCase();
+    const data   = fdt(gval('f-data'));
+    const hora   = gval('f-hora') || 'A SEGUIR';
+    const sala   = gval('f-sala').toUpperCase() || 'A DEFINIR';
+    const tempo  = gval('f-tempo').toUpperCase() || 'A DEFINIR';
+    const medico = gval('f-medico').toUpperCase();
+    const pac    = gval('f-pac').toUpperCase();
+    const nasc   = fdt(gval('f-nasc'));
+    const conv   = gval('f-conv').toUpperCase();
+    const cpf    = gval('f-cpf');
+    const orig   = gval('f-orig').toUpperCase();
+    const sangSim = document.getElementById('f-sang-chk').checked;
+    const sangQtd = gval('f-sang-qtd');
+    const sangQual= gval('f-sang-qual').toUpperCase();
+    const utiSim  = document.getElementById('f-uti-chk').checked;
+    const opme    = gval('f-opme').toUpperCase() || 'SEM NECESSIDADE';
+    const equip   = gval('f-equip').toUpperCase();
+    const proc    = gval('f-proc').toUpperCase();
+    const tuss    = gval('f-tuss').toUpperCase();
+    const lat     = rval('lat');
+    const anest   = rval('anest');
 
-    /* Montar textos dos campos de checkbox — exatamente como no Excel */
-    function chk(checked) { return checked ? '( X )' : '(    )'; }
+    /* ── Validações ── */
+    if (!resp)   { alert('Informe o profissional responsável.'); return; }
+    if (!data)   { alert('Informe a data de agendamento.'); return; }
+    if (!hora)   { alert('Informe o horário CC.'); return; }
+    if (!medico) { alert('Informe o nome e CRM do médico.'); return; }
+    if (!pac)    { alert('Informe o nome do paciente.'); return; }
+    if (!conv)   { alert('Selecione o convênio.'); return; }
+    if (!proc)   { alert('Informe o nome do procedimento.'); return; }
+    if (!tuss)   { alert('Informe o código TUSS do procedimento.'); return; }
 
-    const linhaLat = `LADO QUE SERÁ OPERADO (LATERALIDADE): ` +
-      `${chk(v.lat==='DIREITA')} DIREITA     ` +
-      `${chk(v.lat==='ESQUERDA')} ESQUERDA     ` +
-      `${chk(v.lat==='BILATERAL')} BILATERAL     ` +
-      `${chk(v.lat==='NÃO SE APLICA')} NÃO SE APLICA`;
+    /* ── Textos de checkbox ── */
+    const linhaSang = sangSim
+      ? `${chk(false)} NÃO     ${chk(true)} SIM  -  QUANTIDADE ( ${sangQtd} )  -  QUAL: ${sangQual}`
+      : `${chk(true)} NÃO     ${chk(false)} SIM  -  QUANTIDADE (    )  -  QUAL: `;
+    const linhaUTI  = utiSim
+      ? `${chk(false)} NÃO     ${chk(true)} SIM`
+      : `${chk(true)} NÃO     ${chk(false)} SIM`;
+    const linhaLat  =
+      `${chk(lat==='DIREITA')} DIREITA     ${chk(lat==='ESQUERDA')} ESQUERDA     ` +
+      `${chk(lat==='BILATERAL')} BILATERAL     ${chk(lat==='NÃO SE APLICA')} NÃO SE APLICA`;
+    const linhaAnest =
+      `${chk(anest==='GERAL')} GERAL     ${chk(anest==='RAQUI + SEDAÇÃO')} RAQUI + SEDAÇÃO     ${chk(anest==='LOCAL')} LOCAL`;
+    const procTexto = `${proc}  ///  ${tuss}`;
 
-    const linhaAnest = `TIPO DE ANESTESIA: ` +
-      `${chk(v.anest==='GERAL')} GERAL     ` +
-      `${chk(v.anest==='RAQUI + SEDAÇÃO')} RAQUI + SEDAÇÃO     ` +
-      `${chk(v.anest==='LOCAL')} LOCAL`;
+    /* ── Carrega logo ── */
+    const logoData = await loadLogo();
 
-    const linhaSangue = v.sangueSimN
-      ? `NECESSIDADE RESERVA DE SANGUE: (    ) NÃO     ( X ) SIM  -  QUANTIDADE ( ${v.sangueQtd} )  -  QUAL: ${v.sangueQual}`
-      : `NECESSIDADE RESERVA DE SANGUE: ( X ) NÃO     (    ) SIM  -  QUANTIDADE (    )  -  QUAL: `;
-
-    const linhaUTI = v.utiSim
-      ? `NECESSIDADE RESERVA DE UTI: (    ) NÃO     ( X ) SIM`
-      : `NECESSIDADE RESERVA DE UTI: ( X ) NÃO     (    ) SIM`;
-
-    const procCompleto = v.procCod ? `${v.procNome}  ///  ${v.procCod}` : v.procNome;
+    const btn = document.getElementById('btn-gerar');
+    btn.disabled = true; btn.textContent = '⏳ Gerando…';
 
     /* ── jsPDF ── */
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-    const ML  = 20;   // margem esquerda
-    const CW  = 170;  // largura de conteúdo (210 - 20*2)
-    let   Y   = 20;   // posição vertical inicial
+    /* Constantes de layout */
+    const PW = 210, PH = 297;
+    const ML = 14, MR = 14;
+    const TW = PW - ML - MR; // 182mm
+    const LW = 78;            // coluna de label
+    const VW = TW - LW;      // coluna de valor = 104mm
+    const PAD_X = 3;          // padding horizontal interno
+    const PAD_Y_TOP = 2.8;   // padding topo texto
+    const LBL_FS = 7.5, VAL_FS = 9;
+    const LBL_LH = LBL_FS * 0.352778 * 1.5;  // ~3.97mm
+    const VAL_LH = VAL_FS * 0.352778 * 1.55; // ~4.92mm
+    const MIN_ROW = 8;
 
-    /* Helper: imprime uma linha com quebra automática; retorna nova posição Y */
-    function printLine(text, bold, size, extraSpaceBefore = 0) {
-      Y += extraSpaceBefore;
-      doc.setFont('helvetica', bold ? 'bold' : 'normal');
-      doc.setFontSize(size);
-      const lines = doc.splitTextToSize(text, CW);
-      doc.text(lines, ML, Y);
-      const lineH = size * 0.352778 * 1.35; // pt → mm com espaçamento
-      Y += lines.length * lineH;
-      return Y;
+    const C_AZUL    = [29,  113, 184];
+    const C_AZ_ESC  = [15,  58,  100];
+    const C_VERDE   = [0,   164, 112];
+    const C_BD      = [185, 208, 224]; // borda
+    const C_BG_ROW  = [248, 251, 253]; // fundo de linha
+    const C_LBL     = [38,  62,  98 ]; // cor label
+    const C_VAL     = [15,  15,  15 ]; // cor valor
+    const C_WHITE   = [255, 255, 255];
+
+    let Y = 14;
+
+    /* ── helper: calcula altura de linha ── */
+    function rowH(label, value, bold = false) {
+      doc.setFont('helvetica','bold'); doc.setFontSize(LBL_FS);
+      const lLines = doc.splitTextToSize(label, LW - PAD_X * 2).length;
+      doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(VAL_FS);
+      const vLines = doc.splitTextToSize(String(value||''), VW - PAD_X * 2).length;
+      return Math.max(MIN_ROW,
+        lLines * LBL_LH + PAD_Y_TOP * 2,
+        vLines * VAL_LH + PAD_Y_TOP * 2);
     }
 
-    function blankLine(h = 4) { Y += h; }
+    /* ── helper: nova página se necessário ── */
+    function checkPage(neededH) {
+      if (Y + neededH > PH - 14) {
+        doc.addPage();
+        Y = 14;
+        // redo o cabeçalho azul no topo da nova página
+        doc.setFillColor(...C_AZUL);
+        doc.rect(0, 0, PW, 6, 'F');
+        doc.setFillColor(...C_VERDE);
+        doc.rect(0, 6, PW, 1.5, 'F');
+        Y = 12;
+      }
+    }
 
-    /* ── TÍTULO ── */
-    printLine('DADOS PARA INCLUSÃO NO MAPA CIRÚRGICO', true, 18);
-    blankLine(3);
+    /* ── helper: cabeçalho de seção (fundo azul, texto branco) ── */
+    function secHead(title) {
+      const h = 6.5;
+      checkPage(h + MIN_ROW * 2);
+      doc.setFillColor(...C_AZUL);
+      doc.setDrawColor(...C_BD);
+      doc.setLineWidth(0.3);
+      doc.rect(ML, Y, TW, h, 'FD');
+      doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+      doc.setTextColor(...C_WHITE);
+      doc.text(title, ML + PAD_X, Y + 4.4);
+      doc.setTextColor(...C_VAL);
+      Y += h;
+    }
 
-    /* ── CAMPOS DE IDENTIFICAÇÃO ── */
-    printLine(`PROFISSIONAL RESPONSÁVEL PELA ENTREGA DO FORMULÁRIO: ${v.responsavel}`, false, 10);
-    printLine(`DATA PARA O AGENDAMENTO: ${v.data}`, false, 10);
-    printLine(`HORÁRIO DO AGENDAMENTO NO CENTRO CIRÚRGICO: ${v.horario}`, false, 10);
-    printLine(`SALA CIRÚRGICA PARA AGENDAMENTO: ${v.sala}`, false, 10);
-    printLine(`TEMPO APROXIMADO DO PROCEDIMENTO: ${v.tempo}`, false, 10);
-    printLine(`NOME E CRM DO MÉDICO QUE FARÁ A ABORDAGEM: ${v.medicoCRM}`, false, 10);
+    /* ── helper: linha de dados (label | value) ── */
+    function row(label, value, bold = false) {
+      const h = rowH(label, value, bold);
+      checkPage(h);
 
-    blankLine(5);
+      // Fundo
+      doc.setFillColor(...C_BG_ROW);
+      doc.setDrawColor(...C_BD);
+      doc.setLineWidth(0.3);
+      doc.rect(ML, Y, TW, h, 'FD');
 
-    /* ── DADOS DO PACIENTE ── */
-    printLine('DADOS DO PACIENTE', true, 14);
-    printLine(`NOME COMPLETO: ${v.paciente}`, false, 10);
-    printLine(`DATA DE NASCIMENTO: ${v.nasc || 'NÃO INFORMADO'}`, false, 10);
-    printLine(`CONVÊNIO: ${v.convenio}`, false, 10);
-    printLine(`CPF: ${v.cpf || 'NÃO INFORMADO'}`, false, 10);
-    printLine(`ORIGEM DO PACIENTE: ${v.origem || 'NÃO INFORMADO'}`, false, 10);
+      // Divisor vertical
+      doc.line(ML + LW, Y, ML + LW, Y + h);
 
-    blankLine(5);
+      // Label (bold, azul-escuro)
+      doc.setFont('helvetica','bold'); doc.setFontSize(LBL_FS);
+      doc.setTextColor(...C_LBL);
+      const lblLines = doc.splitTextToSize(label, LW - PAD_X * 2);
+      doc.text(lblLines, ML + PAD_X, Y + PAD_Y_TOP + LBL_FS * 0.352778);
 
-    /* ── INFORMAÇÕES COMPLEMENTARES ── */
-    printLine('INFORMAÇÕES COMPLEMENTARES', true, 14);
-    printLine(linhaSangue,  false, 10);
-    printLine(linhaUTI,     false, 10);
-    printLine(`OPMES NECESSÁRIOS: ${v.opme}`, true, 10);
-    if (v.equip) printLine(`EQUIPAMENTOS NECESSÁRIOS: ${v.equip}`, false, 10);
-    printLine(`NOME E CÓDIGO DO PROCEDIMENTO: ${procCompleto}`, false, 10);
-    printLine(linhaLat,   false, 10);
-    printLine(linhaAnest, false, 10);
+      // Valor
+      doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(VAL_FS);
+      doc.setTextColor(...C_VAL);
+      const valLines = doc.splitTextToSize(String(value||''), VW - PAD_X * 2);
+      doc.text(valLines, ML + LW + PAD_X, Y + PAD_Y_TOP + VAL_FS * 0.352778);
 
-    blankLine(5);
+      Y += h;
+    }
 
-    /* ── PREENCHIMENTO PELA RECEPÇÃO ── */
-    printLine('PREENCHIMENTO PELA RECEPÇÃO', true, 14);
-    printLine('CIENTE NO CC:                                                                                  HORÁRIO:', false, 10);
-    printLine('HORÁRIO DE RECEBIMENTO DO FORMULÁRIO:', false, 10);
+    /* ── helper: linha de recepção (fundo branco, sem valor → espaço vazio) ── */
+    function rowBlank(label, h = 10) {
+      checkPage(h);
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(...C_BD);
+      doc.setLineWidth(0.3);
+      doc.rect(ML, Y, TW, h, 'FD');
+      doc.line(ML + LW, Y, ML + LW, Y + h);
+      doc.setFont('helvetica','bold'); doc.setFontSize(LBL_FS);
+      doc.setTextColor(...C_LBL);
+      doc.text(label, ML + PAD_X, Y + PAD_Y_TOP + LBL_FS * 0.352778);
+      Y += h;
+    }
+
+    /* ══════════════════════════════════════
+       CABEÇALHO DA PÁGINA
+    ══════════════════════════════════════ */
+    // Fundo azul escuro no topo
+    doc.setFillColor(...C_AZ_ESC);
+    doc.rect(0, 0, PW, Y + 17, 'F');
+
+    // Logo Hapvida
+    const logoH = 48 * (174/590); // proporcional: 48mm × ~14.2mm
+    if (logoData) {
+      doc.addImage(logoData, 'PNG', ML, Y + 1, 48, logoH);
+    }
+
+    // Título e hospital
+    const titleX = ML + 52;
+    doc.setFont('helvetica','bold'); doc.setFontSize(14);
+    doc.setTextColor(...C_WHITE);
+    doc.text('AVISO CIRÚRGICO', titleX, Y + 7);
+    doc.setFont('helvetica','normal'); doc.setFontSize(8);
+    doc.setTextColor(180, 215, 240);
+    doc.text('Hospital Paulo Sacramento  ·  Hapvida NotreDame Intermédica  ·  Jundiaí, SP', titleX, Y + 12.5);
+
+    // Data de emissão
+    const now = new Date();
+    const emissao = `Emitido em: ${now.toLocaleDateString('pt-BR')} às ${now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
+    doc.setFontSize(7.5); doc.setTextColor(140, 185, 220);
+    doc.text(emissao, PW - MR, Y + 17, { align: 'right' });
+
+    Y += 19;
+
+    // Faixa verde Hapvida
+    doc.setFillColor(...C_VERDE);
+    doc.rect(0, Y, PW, 2, 'F');
+    Y += 5;
+
+    /* ══════════════════════════════════════
+       SEÇÃO 1 — DADOS PARA INCLUSÃO NO MAPA
+    ══════════════════════════════════════ */
+    secHead('DADOS PARA INCLUSÃO NO MAPA CIRÚRGICO');
+    row('PROFISSIONAL RESPONSÁVEL PELA ENTREGA DO FORMULÁRIO', resp);
+    row('DATA PARA O AGENDAMENTO', data);
+    row('HORÁRIO DO AGENDAMENTO NO CENTRO CIRÚRGICO', hora);
+    row('SALA CIRÚRGICA PARA AGENDAMENTO', sala);
+    row('TEMPO APROXIMADO DO PROCEDIMENTO', tempo);
+    row('NOME E CRM DO MÉDICO QUE FARÁ A ABORDAGEM', medico);
+
+    /* ══════════════════════════════════════
+       SEÇÃO 2 — DADOS DO PACIENTE
+    ══════════════════════════════════════ */
+    secHead('DADOS DO PACIENTE');
+    row('NOME COMPLETO', pac);
+    row('DATA DE NASCIMENTO', nasc || 'NÃO INFORMADO');
+    row('CONVÊNIO', conv);
+    row('CPF', cpf || 'NÃO INFORMADO');
+    row('ORIGEM DO PACIENTE', orig || 'NÃO INFORMADO');
+
+    /* ══════════════════════════════════════
+       SEÇÃO 3 — INFORMAÇÕES COMPLEMENTARES
+    ══════════════════════════════════════ */
+    secHead('INFORMAÇÕES COMPLEMENTARES');
+    row('NECESSIDADE RESERVA DE SANGUE', linhaSang);
+    row('NECESSIDADE RESERVA DE UTI', linhaUTI);
+    row('OPMES NECESSÁRIOS', opme, true);
+    if (equip) row('EQUIPAMENTOS NECESSÁRIOS', equip);
+    row('NOME E CÓDIGO DO PROCEDIMENTO', procTexto);
+    row('LADO QUE SERÁ OPERADO (LATERALIDADE)', linhaLat);
+    row('TIPO DE ANESTESIA', linhaAnest);
+
+    /* ══════════════════════════════════════
+       SEÇÃO 4 — PREENCHIMENTO PELA RECEPÇÃO
+    ══════════════════════════════════════ */
+    secHead('PREENCHIMENTO PELA RECEPÇÃO');
+    rowBlank('CIENTE NO CC', 11);
+    rowBlank('HORÁRIO DE RECEBIMENTO DO FORMULÁRIO', 11);
+
+    /* ══════════════════════════════════════
+       RODAPÉ EM TODAS AS PÁGINAS
+    ══════════════════════════════════════ */
+    const total = doc.internal.getNumberOfPages();
+    for (let pg = 1; pg <= total; pg++) {
+      doc.setPage(pg);
+      doc.setFillColor(...C_AZ_ESC);
+      doc.rect(0, PH - 8, PW, 8, 'F');
+      doc.setFillColor(...C_VERDE);
+      doc.rect(0, PH - 8, PW, 1.2, 'F');
+      doc.setFont('helvetica','normal'); doc.setFontSize(7);
+      doc.setTextColor(160, 200, 230);
+      doc.text('Hospital Paulo Sacramento  ·  Hapvida NotreDame Intermédica  ·  www.hapvida.com.br', PW/2, PH - 3.5, {align:'center'});
+      if (total > 1) {
+        doc.setTextColor(120, 170, 210);
+        doc.text(`Página ${pg} de ${total}`, PW - MR, PH - 3.5, {align:'right'});
+      }
+    }
 
     /* ── Salva ── */
-    const nome = v.paciente.replace(/\s+/g,'-').toLowerCase();
-    const data = v.data.replace(/\//g,'');
-    doc.save(`aviso-cirurgico_${nome}_${data}.pdf`);
+    const nomePac = pac.replace(/\s+/g,'-').toLowerCase().substring(0,30);
+    const dataPdf = (data||'').replace(/\//g,'');
+    doc.save(`aviso-cirurgico_${nomePac}_${dataPdf}.pdf`);
+
+    btn.disabled = false; btn.textContent = '📄 Gerar PDF';
   }
   </script>
 </body>
