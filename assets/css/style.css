@@ -902,6 +902,52 @@ img { max-width: 100%; display: block; }
 .modal-body p:last-child { margin-bottom: 0; }
 
 /* ================================================
+   Loading & Empty States
+   ================================================ */
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  color: var(--cinza-texto);
+  font-size: 14px;
+}
+
+.loading-spinner {
+  width: 20px; height: 20px;
+  border: 2px solid var(--cinza-borda);
+  border-top-color: var(--azul);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-state {
+  padding: 32px;
+  text-align: center;
+  color: var(--cinza-texto);
+  font-size: 14px;
+}
+
+/* Badge "Ao vivo" no header */
+.live-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #4ade80;
+  letter-spacing: .04em;
+  margin-left: 8px;
+  animation: pulse-live 2s ease-in-out infinite;
+}
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .5; }
+}
+
+/* ================================================
    Admin Mode — Intranet HPS
    ================================================ */
 

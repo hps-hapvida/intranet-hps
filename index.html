@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal HPS — Hospital Paulo Sacramento | Hapvida</title>
+  <title>Intranet HPS — Hospital Paulo Sacramento | Hapvida</title>
   <meta name="description" content="Intranet do Hospital Paulo Sacramento. Acesso rápido aos setores, ferramentas e recursos do hospital.">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231539AA'/><text y='24' x='4' font-size='22' font-family='Arial'>🏥</text></svg>">
@@ -24,12 +24,13 @@
 
       <div class="header-search">
         <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Buscar setor ou recurso...">
+        <input type="text" id="search-input" placeholder="Buscar setor…">
       </div>
 
       <nav class="header-nav">
         <a href="index.html">Início</a>
         <a href="#setores">Setores</a>
+        <span id="user-nav"></span>
       </nav>
     </div>
   </header>
@@ -49,126 +50,91 @@
 
   <!-- ===== MAIN ===== -->
   <main class="main-container">
-
-    <!-- Grade de Setores -->
     <section id="setores">
       <div class="sectors-intro" style="margin-bottom: 20px;">
         <h2>Setores do Hospital</h2>
         <p>Clique em um setor para acessar seus recursos, avisos, links e ferramentas.</p>
       </div>
-
-      <div class="sector-grid">
-
-        <a href="setores/pronto-socorro.html" class="sector-card" data-color="red">
-          <span class="sector-badge">APP</span>
-          <div class="sector-icon">🚨</div>
-          <h3>Pronto Socorro</h3>
-          <p>Leitos, triagem, avisos cirúrgicos e escala</p>
-        </a>
-
-        <a href="setores/uti-adulto.html" class="sector-card" data-color="blue">
-          <div class="sector-icon">🫀</div>
-          <h3>UTI Adulto</h3>
-          <p>Protocolos, leitos e gestão de pacientes críticos</p>
-        </a>
-
-        <a href="setores/uti-neonatal.html" class="sector-card" data-color="purple">
-          <div class="sector-icon">🍼</div>
-          <h3>UTI Neonatal</h3>
-          <p>Recursos para assistência neonatal e materna</p>
-        </a>
-
-        <a href="setores/centro-cirurgico.html" class="sector-card" data-color="blue">
-          <div class="sector-icon">🔪</div>
-          <h3>Centro Cirúrgico</h3>
-          <p>Programação, avisos e protocolos cirúrgicos</p>
-        </a>
-
-        <a href="setores/internacao.html" class="sector-card" data-color="green">
-          <div class="sector-icon">🛏️</div>
-          <h3>Internação</h3>
-          <p>Enfermarias, altas, transferências e leitos</p>
-        </a>
-
-        <a href="setores/ambulatorio.html" class="sector-card" data-color="orange">
-          <div class="sector-icon">🏃</div>
-          <h3>Ambulatório</h3>
-          <p>Consultas, agendamentos e especialidades</p>
-        </a>
-
-        <a href="setores/farmacia.html" class="sector-card" data-color="green">
-          <div class="sector-icon">💊</div>
-          <h3>Farmácia</h3>
-          <p>Dispensação, padronização e solicitações</p>
-        </a>
-
-        <a href="setores/same.html" class="sector-card" data-color="yellow">
-          <div class="sector-icon">📁</div>
-          <h3>SAME</h3>
-          <p>Prontuários, laudos e arquivo médico</p>
-        </a>
-
-        <a href="setores/laboratorio.html" class="sector-card" data-color="purple">
-          <div class="sector-icon">🧪</div>
-          <h3>Laboratório</h3>
-          <p>Exames, coletas e resultados</p>
-        </a>
-
-        <a href="setores/radiologia.html" class="sector-card" data-color="blue">
-          <div class="sector-icon">🩻</div>
-          <h3>Radiologia / Imagem</h3>
-          <p>RX, TC, RM e laudos de imagem</p>
-        </a>
-
-        <a href="setores/nutricao.html" class="sector-card" data-color="orange">
-          <div class="sector-icon">🥗</div>
-          <h3>Nutrição</h3>
-          <p>Dietética, NDT e suporte nutricional</p>
-        </a>
-
-        <a href="setores/fisioterapia.html" class="sector-card" data-color="green">
-          <div class="sector-icon">🦾</div>
-          <h3>Fisioterapia</h3>
-          <p>Reabilitação, respiratória e motora</p>
-        </a>
-
-        <a href="setores/servico-social.html" class="sector-card" data-color="purple">
-          <div class="sector-icon">🤝</div>
-          <h3>Serviço Social</h3>
-          <p>Regulação de vagas, alta social e benefícios</p>
-        </a>
-
-        <a href="setores/qualidade.html" class="sector-card" data-color="yellow">
-          <div class="sector-icon">⭐</div>
-          <h3>Qualidade</h3>
-          <p>Indicadores, acreditação e melhorias</p>
-        </a>
-
-        <a href="setores/ti.html" class="sector-card" data-color="blue">
-          <div class="sector-icon">💻</div>
-          <h3>TI</h3>
-          <p>Suporte, sistemas e infraestrutura</p>
-        </a>
-
-        <a href="setores/administracao.html" class="sector-card" data-color="yellow">
-          <div class="sector-icon">🏛️</div>
-          <h3>Administração</h3>
-          <p>Gestão, recursos humanos e operações</p>
-        </a>
-
+      <div class="sector-grid" id="sector-grid">
+        <div class="loading-state" style="grid-column:1/-1">
+          <div class="loading-spinner"></div>
+          <span>Carregando setores…</span>
+        </div>
       </div>
     </section>
-
   </main>
 
   <!-- ===== FOOTER ===== -->
   <footer class="site-footer">
     <strong>Hospital Paulo Sacramento</strong> · Hapvida NotreDame Intermédica ·
     Intranet HPS — uso exclusivo da equipe ·
-    Atualizado em <span id="footer-datetime"></span>
+    <span id="footer-datetime"></span>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/db.js"></script>
   <script src="assets/js/main.js"></script>
-  <script src="assets/js/admin.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    updateDateTime();
+
+    // ---- Render user nav (login/logout) ----
+    async function renderUserNav() {
+      const user = await Auth.getUser();
+      const nav  = document.getElementById('user-nav');
+      if (!nav) return;
+      if (user) {
+        const isAdmin = user.app_metadata?.role === 'admin';
+        nav.innerHTML = `
+          <span style="font-size:13px;opacity:.8;margin-left:4px">${isAdmin ? '✏️ Admin' : '👤 ' + (user.email?.split('@')[0] || '')}</span>
+          <button class="hps-admin-btn active" id="logout-btn" style="margin-left:6px">Sair</button>`;
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+          await Auth.signOut();
+          renderUserNav();
+        });
+      } else {
+        nav.innerHTML = `<a href="login.html" class="hps-admin-btn" style="margin-left:8px;text-decoration:none">🔒 Admin</a>`;
+      }
+    }
+
+    // ---- Render sectors ----
+    async function renderSectors() {
+      const grid = document.getElementById('sector-grid');
+      try {
+        const sectors = await Sectors.list();
+        grid.innerHTML = sectors.map(s => {
+          const hasApp = !!s.featured_app_url;
+          return `<a href="setor.html?slug=${encodeURIComponent(s.slug)}" class="sector-card" data-color="${s.color}">
+            ${hasApp ? '<span class="sector-badge">APP</span>' : ''}
+            <div class="sector-icon">${s.emoji}</div>
+            <h3>${s.name}</h3>
+            <p>${s.description || ''}</p>
+          </a>`;
+        }).join('');
+
+        // Pesquisa
+        const input = document.getElementById('search-input');
+        if (input) {
+          input.addEventListener('input', () => {
+            const q = input.value.toLowerCase();
+            grid.querySelectorAll('.sector-card').forEach(card => {
+              card.style.display = card.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+          });
+        }
+      } catch(e) {
+        grid.innerHTML = `<p style="color:var(--vermelho);grid-column:1/-1;padding:24px;text-align:center">
+          Erro ao conectar ao banco de dados.<br>
+          <small>Verifique as credenciais em <code>assets/js/config.js</code></small>
+        </p>`;
+      }
+    }
+
+    await Promise.all([renderUserNav(), renderSectors()]);
+
+    Auth.onAuthChange(renderUserNav);
+  });
+  </script>
 </body>
 </html>

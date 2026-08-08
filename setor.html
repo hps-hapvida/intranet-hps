@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setor — Portal HPS | Hapvida</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231D71B8'/><text y='24' x='4' font-size='22' font-family='Arial'>🏥</text></svg>">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo">
+        <img src="assets/img/hapvida-logo.png" alt="Hapvida" class="logo-img">
+        <div class="logo-divider"></div>
+        <div class="logo-hospital">
+          <span class="nome">Hospital Paulo Sacramento</span>
+          <span class="sub">Jundiaí · SP</span>
+        </div>
+      </a>
+      <nav class="header-nav">
+        <a href="index.html">← Setores</a>
+        <span id="hps-live-badge" class="live-badge" style="display:none" title="Conectado — atualizações em tempo real">● Ao vivo</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== BREADCRUMB ===== -->
+  <div class="breadcrumb-bar">
+    <nav class="breadcrumb">
+      <a href="index.html">Início</a>
+      <span class="sep">›</span>
+      <span id="bc-sector-name">Carregando…</span>
+    </nav>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" style="padding: 36px 24px;" id="sector-hero" style="display:none">
+    <div class="hero-inner" style="display:flex; align-items:center; gap:20px;">
+      <div id="sector-emoji" style="font-size:52px; flex-shrink:0;"></div>
+      <div>
+        <h1 id="sector-name" style="font-size: clamp(20px,3vw,30px);"></h1>
+        <p id="sector-desc" style="margin:0;"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main-container">
+
+    <!-- App Destaque (ex: PS → App de Leitos) -->
+    <div class="app-destaque" id="featured-app" style="display:none">
+      <div class="app-destaque-icon">🚀</div>
+      <div class="app-destaque-info">
+        <h3 id="featured-app-name"></h3>
+        <p>Clique para acessar o sistema diretamente.</p>
+        <a id="featured-app-link" href="#" target="_blank" class="btn-app">Abrir sistema</a>
+      </div>
+    </div>
+
+    <!-- Layout -->
+    <div class="sector-layout">
+
+      <!-- Coluna Principal -->
+      <div class="sector-main">
+
+        <!-- Avisos -->
+        <section>
+          <div class="section-header">
+            <div class="section-title">
+              <div class="icon red">📢</div>
+              Avisos &amp; Comunicados
+            </div>
+            <button class="btn-primary" id="btn-novo-aviso" style="display:none">+ Novo Aviso</button>
+          </div>
+          <div class="card">
+            <div class="card-body" style="padding: 8px 16px;" id="posts-container">
+              <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <span>Carregando avisos…</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FAQs -->
+        <section id="faqs-section" style="display:none">
+          <div class="section-header">
+            <div class="section-title">
+              <div class="icon green">❓</div>
+              Perguntas Frequentes
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body" id="faqs-container"></div>
+          </div>
+        </section>
+
+      </div><!-- /sector-main -->
+
+      <!-- Coluna Lateral -->
+      <div class="sector-side">
+
+        <!-- Links Rápidos -->
+        <div class="card" id="links-card" style="display:none">
+          <div class="card-header">
+            <div class="section-title" style="font-size:15px;">
+              <div class="icon" style="width:28px;height:28px;font-size:14px;">🔗</div>
+              Links Rápidos
+            </div>
+          </div>
+          <div class="card-body" style="padding:12px;">
+            <ul class="link-list" id="links-container"></ul>
+          </div>
+        </div>
+
+        <!-- Ramais -->
+        <div class="card" id="extensions-card" style="display:none">
+          <div class="card-header">
+            <div class="section-title" style="font-size:15px;">
+              <div class="icon orange" style="width:28px;height:28px;font-size:14px;">📞</div>
+              Ramais Importantes
+            </div>
+          </div>
+          <div class="card-body" style="padding:8px 16px;">
+            <ul class="link-list" id="extensions-container"></ul>
+          </div>
+        </div>
+
+        <!-- Documentos -->
+        <div class="card" id="documents-card" style="display:none">
+          <div class="card-header">
+            <div class="section-title" style="font-size:15px;">
+              <div class="icon purple" style="width:28px;height:28px;font-size:14px;">📄</div>
+              Documentos
+            </div>
+          </div>
+          <div class="card-body" style="padding:8px 16px;">
+            <ul class="link-list" id="documents-container"></ul>
+          </div>
+        </div>
+
+      </div><!-- /sector-side -->
+    </div><!-- /sector-layout -->
+  </main>
+
+  <!-- ===== MODAL de post ===== -->
+  <div class="modal-overlay" id="post-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title"></h2>
+        <button class="modal-close" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="modal-body-text"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <strong id="footer-sector-name">Hospital Paulo Sacramento</strong> · Hapvida NotreDame Intermédica ·
+    Intranet HPS — uso exclusivo da equipe ·
+    <span id="footer-datetime"></span>
+  </footer>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/db.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+  /* ===== Lógica da página de setor ===== */
+
+  const MONTHS = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+
+  let currentSector = null;
+  let currentUser = null;
+  let realtimeChannel = null;
+
+  /* ---- Utils ---- */
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function escAttr(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ---- Render helpers ---- */
+  function formatDate(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return {
+      dia: String(d.getDate()).padStart(2, '0'),
+      mes: MONTHS[d.getMonth()]
+    };
+  }
+
+  function tagLabel(tag) {
+    return { urgente:'Urgente', aviso:'Aviso', info:'Info', tutorial:'Treinamento' }[tag] || tag;
+  }
+
+  function renderPost(post, isAdmin) {
+    const { dia, mes } = formatDate(post.post_date);
+    return `
+      <div class="post-item" data-post-id="${escAttr(post.id)}"
+           data-modal-title="${escAttr(post.title)}"
+           data-modal-body="${escAttr(post.body || post.summary || '')}">
+        <div class="post-date"><div class="dia">${esc(dia)}</div><div class="mes">${esc(mes)}</div></div>
+        <div class="post-content">
+          <span class="post-tag ${esc(post.tag)}">${esc(tagLabel(post.tag))}</span>
+          <div class="post-titulo"><a>${esc(post.title)}</a></div>
+          <div class="post-resumo">${esc(post.summary || '')}</div>
+          ${post.author ? `<div class="post-meta"><span>👤 ${esc(post.author)}</span><span>👁 Clique para ler mais</span></div>` : ''}
+        </div>
+        ${isAdmin ? `<div class="hps-post-edit-btns">
+          <button class="hps-edit-btn" onclick="editPost('${escAttr(post.id)}')" title="Editar">✏️</button>
+          <button class="hps-del-btn"  onclick="deletePost('${escAttr(post.id)}')" title="Excluir">🗑</button>
+        </div>` : ''}
+      </div>`;
+  }
+
+  function renderEmptyPosts() {
+    return `<div class="empty-state">
+      <p style="color:var(--cinza-texto);text-align:center;padding:24px;">
+        Nenhum aviso publicado ainda.
+      </p>
+    </div>`;
+  }
+
+  /* ---- Renderização principal ---- */
+  async function loadPosts() {
+    const container = document.getElementById('posts-container');
+    if (!container || !currentSector) return;
+    try {
+      const posts = await Posts.list(currentSector.id);
+      const isAdmin = !!currentUser && currentUser.app_metadata?.role === 'admin';
+      container.innerHTML = posts.length
+        ? posts.map(p => renderPost(p, isAdmin)).join('')
+        : renderEmptyPosts();
+      initModal();
+    } catch(e) {
+      container.innerHTML = `<p style="color:var(--vermelho);padding:16px;">Erro ao carregar avisos: ${esc(e.message)}</p>`;
+    }
+  }
+
+  async function loadLinks() {
+    if (!currentSector) return;
+    const links = await Links.list(currentSector.id);
+    const container = document.getElementById('links-container');
+    const card = document.getElementById('links-card');
+    if (!container) return;
+    if (links.length === 0) { card.style.display = 'none'; return; }
+    card.style.display = '';
+    container.innerHTML = links.map(l => `
+      <li class="link-item">
+        <a href="${escAttr(l.url)}" ${l.url !== '#' ? 'target="_blank"' : ''} ${l.is_featured ? 'class="link-destaque"' : ''}>
+          <span class="link-icon">${esc(l.icon)}</span>
+          ${esc(l.label)}
+          <span class="link-arrow">→</span>
+        </a>
+      </li>`).join('');
+  }
+
+  async function loadExtensions() {
+    if (!currentSector) return;
+    const exts = await Extensions.list(currentSector.id);
+    const container = document.getElementById('extensions-container');
+    const card = document.getElementById('extensions-card');
+    if (!container) return;
+    if (exts.length === 0) { card.style.display = 'none'; return; }
+    card.style.display = '';
+    container.innerHTML = exts.map(e => `
+      <li class="link-item">
+        <a href="tel:${escAttr(e.number)}">
+          <span class="link-icon">${esc(e.icon)}</span>
+          ${esc(e.label)} — ${esc(e.number)}
+          <span class="link-arrow">→</span>
+        </a>
+      </li>`).join('');
+  }
+
+  async function loadDocuments() {
+    if (!currentSector) return;
+    const docs = await Documents.list(currentSector.id);
+    const container = document.getElementById('documents-container');
+    const card = document.getElementById('documents-card');
+    if (!container) return;
+    if (docs.length === 0) { card.style.display = 'none'; return; }
+    card.style.display = '';
+    container.innerHTML = docs.map(d => `
+      <li class="link-item">
+        <a href="${escAttr(d.url)}" ${d.url !== '#' ? 'target="_blank"' : ''}>
+          <span class="link-icon">${esc(d.icon)}</span>
+          ${esc(d.label)}
+          <span class="link-arrow">→</span>
+        </a>
+      </li>`).join('');
+  }
+
+  async function loadFAQs() {
+    if (!currentSector) return;
+    const items = await FAQs.list(currentSector.id);
+    const container = document.getElementById('faqs-container');
+    const section = document.getElementById('faqs-section');
+    if (!container) return;
+    if (items.length === 0) { section.style.display = 'none'; return; }
+    section.style.display = '';
+    container.innerHTML = items.map(f => `
+      <div class="faq-item">
+        <div class="faq-question">${esc(f.question)}<span class="faq-chevron">▼</span></div>
+        <div class="faq-answer">${esc(f.answer)}</div>
+      </div>`).join('');
+    initFaq();
+  }
+
+  function renderSectorMeta(sector) {
+    document.title = `${sector.name} — Portal HPS | Hapvida`;
+    document.getElementById('bc-sector-name').textContent = sector.name;
+    document.getElementById('sector-emoji').textContent = sector.emoji;
+    document.getElementById('sector-name').textContent = sector.name;
+    document.getElementById('sector-desc').textContent = sector.description || '';
+    document.getElementById('sector-hero').style.display = '';
+    document.getElementById('footer-sector-name').textContent = `${sector.name} · Hospital Paulo Sacramento`;
+
+    if (sector.featured_app_url) {
+      document.getElementById('featured-app-name').textContent = sector.featured_app_name || 'Sistema';
+      document.getElementById('featured-app-link').href = sector.featured_app_url;
+      document.getElementById('featured-app-link').textContent = `🚀 Abrir ${sector.featured_app_name || 'Sistema'}`;
+      document.getElementById('featured-app').style.display = '';
+    }
+  }
+
+  /* ---- Real-time ---- */
+  function setupRealtime(sectorId) {
+    if (realtimeChannel) realtimeChannel.unsubscribe();
+    realtimeChannel = Posts.subscribeToChanges(sectorId, () => loadPosts());
+    const badge = document.getElementById('hps-live-badge');
+    db.channel('system').subscribe(status => {
+      if (badge) badge.style.display = status === 'SUBSCRIBED' ? '' : 'none';
+    });
+    if (badge) badge.style.display = '';
+  }
+
+  /* ---- Admin: editar post ---- */
+  window.editPost = async function(postId) {
+    const posts = await Posts.list(currentSector.id);
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+    openPostEditor(post);
+  };
+
+  window.deletePost = async function(postId) {
+    if (!confirm('Excluir este aviso?')) return;
+    try {
+      await Posts.remove(postId);
+      await loadPosts();
+    } catch(e) { alert('Erro ao excluir: ' + e.message); }
+  };
+
+  window.openPostEditor = function(post = null) {
+    const isEdit = !!post;
+    const today = new Date();
+    const dateStr = post?.post_date || today.toISOString().split('T')[0];
+    const d = new Date(dateStr + 'T00:00:00');
+    const dia = String(d.getDate()).padStart(2,'0');
+    const mes = MONTHS[d.getMonth()];
+
+    const modalId = 'hps-editor-modal';
+    document.getElementById(modalId)?.remove();
+
+    const el = document.createElement('div');
+    el.className = 'hps-modal-overlay';
+    el.id = modalId;
+    el.innerHTML = `
+      <div class="hps-modal">
+        <div class="hps-modal-header">
+          <h3>${isEdit ? 'Editar Aviso' : 'Novo Aviso'}</h3>
+          <button class="hps-modal-close" data-close="${modalId}">✕</button>
+        </div>
+        <div class="hps-modal-body">
+          <label>Título *
+            <input id="ef-title" type="text" value="${escAttr(post?.title||'')}" placeholder="Título do aviso" />
+          </label>
+          <label>Resumo <span style="font-weight:400;opacity:.7">(texto curto exibido na lista)</span>
+            <textarea id="ef-summary" rows="2">${esc(post?.summary||'')}</textarea>
+          </label>
+          <label>Corpo completo <span style="font-weight:400;opacity:.7">(aceita HTML simples)</span>
+            <textarea id="ef-body" rows="5">${esc(post?.body||'')}</textarea>
+          </label>
+          <div class="hps-f-row">
+            <label style="flex:2">Categoria
+              <select id="ef-tag">
+                ${['urgente','aviso','info','tutorial'].map(t =>
+                  `<option value="${t}" ${(post?.tag||'aviso')===t?'selected':''}>${{urgente:'🔴 Urgente',aviso:'🔵 Aviso',info:'⚪ Info',tutorial:'🟢 Treinamento'}[t]}</option>`
+                ).join('')}
+              </select>
+            </label>
+            <label>Data
+              <input id="ef-date" type="date" value="${escAttr(dateStr)}" />
+            </label>
+          </div>
+          <label>Autor / Setor responsável
+            <input id="ef-author" type="text" value="${escAttr(post?.author||'')}" placeholder="Ex: Coordenação PS" />
+          </label>
+        </div>
+        <div class="hps-modal-footer">
+          <button class="hps-bar-btn" data-close="${modalId}">Cancelar</button>
+          <button class="hps-bar-btn primary" id="ef-save">${isEdit ? 'Salvar alterações' : 'Publicar aviso'}</button>
+        </div>
+      </div>`;
+
+    document.body.appendChild(el);
+    el.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => { el.classList.remove('open'); setTimeout(() => el.remove(), 280); }));
+    el.addEventListener('click', e => { if (e.target === el) { el.classList.remove('open'); setTimeout(() => el.remove(), 280); } });
+    requestAnimationFrame(() => { el.classList.add('open'); document.getElementById('ef-title').focus(); });
+
+    document.getElementById('ef-save').addEventListener('click', async () => {
+      const title = document.getElementById('ef-title').value.trim();
+      if (!title) { document.getElementById('ef-title').focus(); return; }
+      const fields = {
+        title,
+        summary:  document.getElementById('ef-summary').value.trim(),
+        body:     document.getElementById('ef-body').value.trim(),
+        tag:      document.getElementById('ef-tag').value,
+        post_date: document.getElementById('ef-date').value,
+        author:   document.getElementById('ef-author').value.trim(),
+      };
+      try {
+        if (isEdit) await Posts.update(post.id, fields);
+        else        await Posts.create(currentSector.id, fields);
+        el.classList.remove('open'); setTimeout(() => el.remove(), 280);
+        await loadPosts();
+      } catch(e) { alert('Erro ao salvar: ' + e.message); }
+    });
+  };
+
+  /* ---- Init ---- */
+  async function init() {
+    const slug = new URLSearchParams(location.search).get('slug');
+    if (!slug) { location.href = 'index.html'; return; }
+
+    try {
+      currentSector = await Sectors.get(slug);
+    } catch(e) {
+      document.getElementById('posts-container').innerHTML =
+        `<p style="color:var(--vermelho);padding:24px;">Setor não encontrado: <strong>${esc(slug)}</strong></p>`;
+      return;
+    }
+
+    renderSectorMeta(currentSector);
+
+    const [user] = await Promise.all([Auth.getUser()]);
+    currentUser = user;
+    const isAdmin = user?.app_metadata?.role === 'admin';
+
+    // Botão "Novo Aviso" para admin
+    const btnNovo = document.getElementById('btn-novo-aviso');
+    if (isAdmin && btnNovo) {
+      btnNovo.style.display = '';
+      btnNovo.addEventListener('click', () => openPostEditor(null));
+    }
+
+    await Promise.all([loadPosts(), loadLinks(), loadExtensions(), loadDocuments(), loadFAQs()]);
+    setupRealtime(currentSector.id);
+    updateDateTime();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+
+  // Atualiza posts quando auth muda (login/logout)
+  Auth.onAuthChange(async (user) => {
+    currentUser = user;
+    if (currentSector) await loadPosts();
+    const isAdmin = user?.app_metadata?.role === 'admin';
+    const btnNovo = document.getElementById('btn-novo-aviso');
+    if (btnNovo) btnNovo.style.display = isAdmin ? '' : 'none';
+  });
+  </script>
+</body>
+</html>
