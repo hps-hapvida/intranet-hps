@@ -4,6 +4,6 @@
    Dashboard → Settings → API
    ================================================ */
 window.HPS_CONFIG = {
-  supabaseUrl:  'COLE_AQUI_A_URL_DO_PROJETO',   // ex: https://xyzxyz.supabase.co
-  supabaseKey:  'COLE_AQUI_A_ANON_KEY',          // chave pública (anon/public)
+  supabaseUrl:  'https://zondjpwnhdmhzbclyzok.supabase.co',
+  supabaseKey:  'sb_publishable_nhpztHDEhPzdyiyZ7SCToA_Kdlr-R4j',
 };
