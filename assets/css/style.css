@@ -900,3 +900,231 @@ img { max-width: 100%; display: block; }
 .modal-body { padding: 24px; }
 .modal-body p { font-size: 15px; line-height: 1.7; color: var(--cinza-texto); margin-bottom: 12px; }
 .modal-body p:last-child { margin-bottom: 0; }
+
+/* ================================================
+   Admin Mode — Intranet HPS
+   ================================================ */
+
+/* Botão admin no header */
+.hps-admin-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.35);
+  color: #fff;
+  border-radius: 6px;
+  padding: 5px 11px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background .2s;
+  font-family: inherit;
+}
+.hps-admin-btn:hover { background: rgba(255,255,255,.15); }
+.hps-admin-btn.active {
+  background: var(--laranja);
+  border-color: var(--laranja);
+}
+
+/* Barra de admin (fixa no topo) */
+#hps-admin-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  background: var(--azul-escuro);
+  border-bottom: 3px solid var(--laranja);
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
+.hps-admin-bar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.hps-admin-bar-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,.92);
+  letter-spacing: .01em;
+}
+.hps-admin-bar-actions { display: flex; gap: 8px; }
+
+.hps-bar-btn {
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,.3);
+  background: transparent;
+  color: #fff;
+  font-family: inherit;
+  transition: background .2s;
+}
+.hps-bar-btn:hover { background: rgba(255,255,255,.15); }
+.hps-bar-btn.primary {
+  background: var(--laranja);
+  border-color: var(--laranja);
+}
+.hps-bar-btn.primary:hover { background: #d8561a; }
+
+/* Empurra o header para baixo da admin bar */
+body.hps-admin-mode { padding-top: 44px; }
+body.hps-admin-mode .site-header { top: 44px !important; }
+
+/* Botões de edição nos posts */
+.post-item { position: relative; }
+.hps-post-edit-btns {
+  position: absolute;
+  top: 8px; right: 8px;
+  display: flex; gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+  z-index: 10;
+}
+.post-item:hover .hps-post-edit-btns {
+  opacity: 1;
+  pointer-events: all;
+}
+.hps-edit-btn, .hps-del-btn {
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s, color .2s;
+  font-family: inherit;
+}
+.hps-edit-btn { background: var(--azul-claro); color: var(--azul-escuro); }
+.hps-edit-btn:hover { background: var(--azul); color: #fff; }
+.hps-del-btn { background: #fee2e2; color: #c53030; }
+.hps-del-btn:hover { background: var(--vermelho); color: #fff; }
+
+/* Novos posts criados pelo admin */
+.hps-new-post { border-left: 3px solid var(--laranja); }
+
+/* ---- Modais do admin ---- */
+.hps-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0,0,0,0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  transition: background .25s;
+}
+.hps-modal-overlay.open { background: rgba(0,0,0,.55); }
+
+.hps-modal {
+  background: #fff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,.28);
+  transform: translateY(18px);
+  opacity: 0;
+  transition: transform .25s, opacity .25s;
+}
+.hps-modal-overlay.open .hps-modal {
+  transform: translateY(0);
+  opacity: 1;
+}
+.hps-modal-sm { max-width: 400px; }
+
+.hps-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--cinza-borda);
+}
+.hps-modal-header h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--texto-escuro);
+  margin: 0;
+}
+.hps-modal-close {
+  background: none; border: none;
+  cursor: pointer; font-size: 18px;
+  color: var(--cinza-texto);
+  padding: 4px 6px; border-radius: 4px;
+  transition: color .2s;
+  line-height: 1;
+}
+.hps-modal-close:hover { color: var(--texto-escuro); }
+
+.hps-modal-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.hps-modal-body label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cinza-texto);
+}
+.hps-modal-body input,
+.hps-modal-body textarea,
+.hps-modal-body select {
+  padding: 9px 12px;
+  border: 1.5px solid var(--cinza-borda);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--cinza-fundo);
+  color: var(--texto-escuro);
+  transition: border-color .2s, box-shadow .2s;
+  resize: vertical;
+}
+.hps-modal-body input:focus,
+.hps-modal-body textarea:focus,
+.hps-modal-body select:focus {
+  outline: none;
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(29,113,184,.14);
+  background: #fff;
+}
+.hps-f-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.hps-f-row label { flex: 1; min-width: 0; }
+.hps-f-row input[type=text] { width: 100%; }
+
+.hps-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 24px;
+  border-top: 1px solid var(--cinza-borda);
+}
+
+.hps-login-info {
+  font-size: 14px;
+  color: var(--cinza-texto);
+  margin: 0;
+}
+.hps-login-err {
+  display: none;
+  color: var(--vermelho);
+  font-size: 13px;
+  margin: 0;
+  font-weight: 600;
+}
