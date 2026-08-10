@@ -445,11 +445,11 @@
     const LW = 78;            // coluna de label
     const VW = TW - LW;      // coluna de valor = 104mm
     const PAD_X = 3;          // padding horizontal interno
-    const PAD_Y_TOP = 2.8;   // padding topo texto
-    const LBL_FS = 7.5, VAL_FS = 9;
-    const LBL_LH = LBL_FS * 0.352778 * 1.5;  // ~3.97mm
-    const VAL_LH = VAL_FS * 0.352778 * 1.55; // ~4.92mm
-    const MIN_ROW = 8;
+    const PAD_Y_TOP = 1.6;   // padding topo texto (reduzido)
+    const LBL_FS = 7, VAL_FS = 8.5;
+    const LBL_LH = LBL_FS * 0.352778 * 1.38;  // ~3.41mm por linha
+    const VAL_LH = VAL_FS * 0.352778 * 1.38;  // ~4.14mm por linha
+    const MIN_ROW = 6.5;
 
     const C_AZUL    = [29,  113, 184];
     const C_AZ_ESC  = [15,  58,  100];
@@ -489,15 +489,15 @@
 
     /* ── helper: cabeçalho de seção (fundo azul, texto branco) ── */
     function secHead(title) {
-      const h = 6.5;
+      const h = 5.5;
       checkPage(h + MIN_ROW * 2);
       doc.setFillColor(...C_AZUL);
       doc.setDrawColor(...C_BD);
       doc.setLineWidth(0.3);
       doc.rect(ML, Y, TW, h, 'FD');
-      doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+      doc.setFont('helvetica','bold'); doc.setFontSize(8);
       doc.setTextColor(...C_WHITE);
-      doc.text(title, ML + PAD_X, Y + 4.4);
+      doc.text(title, ML + PAD_X, Y + 3.8);
       doc.setTextColor(...C_VAL);
       Y += h;
     }
@@ -532,7 +532,7 @@
     }
 
     /* ── helper: linha de recepção (fundo branco, sem valor → espaço vazio) ── */
-    function rowBlank(label, h = 10) {
+    function rowBlank(label, h = 8) {
       checkPage(h);
       doc.setFillColor(255, 255, 255);
       doc.setDrawColor(...C_BD);
@@ -548,37 +548,39 @@
     /* ══════════════════════════════════════
        CABEÇALHO DA PÁGINA
     ══════════════════════════════════════ */
-    // Fundo azul escuro no topo
+    const logoW = 40, logoH = logoW * (174/590); // ~11.8mm
+    const hdrH  = logoH + 5; // altura total do cabeçalho ~16.8mm
+
+    // Fundo azul escuro
     doc.setFillColor(...C_AZ_ESC);
-    doc.rect(0, 0, PW, Y + 17, 'F');
+    doc.rect(0, 0, PW, hdrH + 3, 'F');
 
     // Logo Hapvida
-    const logoH = 48 * (174/590); // proporcional: 48mm × ~14.2mm
     if (logoData) {
-      doc.addImage(logoData, 'PNG', ML, Y + 1, 48, logoH);
+      doc.addImage(logoData, 'PNG', ML, Y, logoW, logoH);
     }
 
     // Título e hospital
-    const titleX = ML + 52;
-    doc.setFont('helvetica','bold'); doc.setFontSize(14);
+    const titleX = ML + logoW + 4;
+    doc.setFont('helvetica','bold'); doc.setFontSize(13);
     doc.setTextColor(...C_WHITE);
-    doc.text('AVISO CIRÚRGICO', titleX, Y + 7);
-    doc.setFont('helvetica','normal'); doc.setFontSize(8);
+    doc.text('AVISO CIRÚRGICO', titleX, Y + 6);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
     doc.setTextColor(180, 215, 240);
-    doc.text('Hospital Paulo Sacramento  ·  Hapvida NotreDame Intermédica  ·  Jundiaí, SP', titleX, Y + 12.5);
+    doc.text('Hospital Paulo Sacramento  ·  Hapvida NotreDame Intermédica  ·  Jundiaí, SP', titleX, Y + 10.5);
 
     // Data de emissão
     const now = new Date();
     const emissao = `Emitido em: ${now.toLocaleDateString('pt-BR')} às ${now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
-    doc.setFontSize(7.5); doc.setTextColor(140, 185, 220);
-    doc.text(emissao, PW - MR, Y + 17, { align: 'right' });
+    doc.setFontSize(7); doc.setTextColor(140, 185, 220);
+    doc.text(emissao, PW - MR, Y + hdrH, { align: 'right' });
 
-    Y += 19;
+    Y += hdrH + 2;
 
     // Faixa verde Hapvida
     doc.setFillColor(...C_VERDE);
-    doc.rect(0, Y, PW, 2, 'F');
-    Y += 5;
+    doc.rect(0, Y, PW, 1.5, 'F');
+    Y += 3;
 
     /* ══════════════════════════════════════
        SEÇÃO 1 — DADOS PARA INCLUSÃO NO MAPA
