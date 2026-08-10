@@ -460,7 +460,7 @@
     const C_VAL     = [15,  15,  15 ]; // cor valor
     const C_WHITE   = [255, 255, 255];
 
-    let Y = 14;
+    let Y = 3;
 
     /* ── helper: calcula altura de linha ── */
     function rowH(label, value, bold = false) {
@@ -573,7 +573,7 @@
     const now = new Date();
     const emissao = `Emitido em: ${now.toLocaleDateString('pt-BR')} às ${now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
     doc.setFontSize(7); doc.setTextColor(140, 185, 220);
-    doc.text(emissao, PW - MR, Y + hdrH, { align: 'right' });
+    doc.text(emissao, PW - MR, Y + hdrH - 1.5, { align: 'right' });
 
     Y += hdrH + 2;
 
