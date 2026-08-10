@@ -623,6 +623,94 @@
     rowBlank('HORÁRIO DE RECEBIMENTO DO FORMULÁRIO', 11);
 
     /* ══════════════════════════════════════
+       PÁGINA 2 — SOLICITAÇÃO DE OPME
+    ══════════════════════════════════════ */
+    doc.addPage();
+    let Y2 = 3;
+
+    // Cabeçalho (mesmo padrão da p1)
+    doc.setFillColor(...C_AZ_ESC);
+    doc.rect(0, 0, PW, hdrH + 3, 'F');
+    if (logoData) doc.addImage(logoData, 'PNG', ML, Y2, logoW, logoH);
+    const p2X = ML + logoW + 4;
+    doc.setFont('helvetica','bold'); doc.setFontSize(13);
+    doc.setTextColor(...C_WHITE);
+    doc.text('SOLICITAÇÃO DE OPME', p2X, Y2 + 6);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+    doc.setTextColor(180, 215, 240);
+    doc.text('Hospital Paulo Sacramento  ·  Hapvida NotreDame Intermédica  ·  Jundiaí, SP', p2X, Y2 + 10.5);
+    doc.setFontSize(7); doc.setTextColor(140, 185, 220);
+    doc.text(emissao, PW - MR, Y2 + hdrH - 1.5, {align:'right'});
+    Y2 += hdrH + 2;
+    doc.setFillColor(...C_VERDE);
+    doc.rect(0, Y2, PW, 1.5, 'F');
+    Y2 += 3;
+
+    // Helpers locais (sem checkPage)
+    const p2SecH = (title) => {
+      doc.setFillColor(...C_AZUL); doc.setDrawColor(...C_BD); doc.setLineWidth(0.3);
+      doc.rect(ML, Y2, TW, 5.5, 'FD');
+      doc.setFont('helvetica','bold'); doc.setFontSize(8);
+      doc.setTextColor(...C_WHITE);
+      doc.text(title, ML + PAD_X, Y2 + 3.8);
+      doc.setTextColor(...C_VAL);
+      Y2 += 5.5;
+    };
+
+    const p2Row = (lbl, val, bold = false) => {
+      const h = rowH(lbl, val, bold);
+      doc.setFillColor(...C_BG_ROW); doc.setDrawColor(...C_BD); doc.setLineWidth(0.3);
+      doc.rect(ML, Y2, TW, h, 'FD');
+      doc.line(ML + LW, Y2, ML + LW, Y2 + h);
+      doc.setFont('helvetica','bold'); doc.setFontSize(LBL_FS);
+      doc.setTextColor(...C_LBL);
+      doc.text(doc.splitTextToSize(lbl, LW - PAD_X*2), ML + PAD_X, Y2 + PAD_Y_TOP + LBL_FS*0.352778);
+      doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(VAL_FS);
+      doc.setTextColor(...C_VAL);
+      doc.text(doc.splitTextToSize(String(val||''), VW - PAD_X*2), ML + LW + PAD_X, Y2 + PAD_Y_TOP + VAL_FS*0.352778);
+      Y2 += h;
+    };
+
+    // IDENTIFICAÇÃO DO PACIENTE
+    p2SecH('IDENTIFICAÇÃO DO PACIENTE');
+    p2Row('NOME COMPLETO DO PACIENTE', pac);
+    p2Row('DATA DE NASCIMENTO', nasc || 'NÃO INFORMADO');
+    p2Row('CONVÊNIO', conv);
+    p2Row('CPF', cpf || 'NÃO INFORMADO');
+
+    // DADOS DO PROCEDIMENTO
+    p2SecH('DADOS DO PROCEDIMENTO');
+    p2Row('NOME DO PROCEDIMENTO / CÓDIGO TUSS', procTexto);
+    p2Row('NOME E CRM DO MÉDICO SOLICITANTE', medico);
+    p2Row('DATA PREVISTA DA CIRURGIA', data);
+
+    // RELAÇÃO DE OPME SOLICITADOS
+    p2SecH('RELAÇÃO DE OPME SOLICITADOS');
+    const opmeTextLines = doc.splitTextToSize(opme, TW - PAD_X * 2);
+    const opmeBlockH = Math.max(60, opmeTextLines.length * VAL_LH + PAD_Y_TOP * 2 + 4);
+    doc.setFillColor(255,255,255); doc.setDrawColor(...C_BD); doc.setLineWidth(0.3);
+    doc.rect(ML, Y2, TW, opmeBlockH, 'FD');
+    doc.setFont('helvetica','normal'); doc.setFontSize(VAL_FS);
+    doc.setTextColor(...C_VAL);
+    doc.text(opmeTextLines, ML + PAD_X, Y2 + PAD_Y_TOP + VAL_FS * 0.352778);
+    Y2 += opmeBlockH;
+
+    // ASSINATURA DO MÉDICO SOLICITANTE
+    Y2 += 5;
+    const sigW1 = 108, sigW2 = 40, sigW3 = TW - sigW1 - sigW2;
+    const sigTotalH = 22;
+    doc.setFillColor(255,255,255); doc.setDrawColor(...C_BD); doc.setLineWidth(0.3);
+    doc.rect(ML, Y2, TW, sigTotalH, 'FD');
+    doc.line(ML + sigW1, Y2, ML + sigW1, Y2 + sigTotalH);
+    doc.line(ML + sigW1 + sigW2, Y2, ML + sigW1 + sigW2, Y2 + sigTotalH);
+    doc.setFont('helvetica','bold'); doc.setFontSize(LBL_FS);
+    doc.setTextColor(...C_LBL);
+    doc.text('ASSINATURA E CARIMBO DO MÉDICO', ML + PAD_X, Y2 + PAD_Y_TOP + LBL_FS*0.352778);
+    doc.text('CRM', ML + sigW1 + PAD_X, Y2 + PAD_Y_TOP + LBL_FS*0.352778);
+    doc.text('DATA', ML + sigW1 + sigW2 + PAD_X, Y2 + PAD_Y_TOP + LBL_FS*0.352778);
+    Y2 += sigTotalH;
+
+    /* ══════════════════════════════════════
        RODAPÉ EM TODAS AS PÁGINAS
     ══════════════════════════════════════ */
     const total = doc.internal.getNumberOfPages();
