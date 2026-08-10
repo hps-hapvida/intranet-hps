@@ -7,12 +7,19 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231D71B8'/><text y='24' x='4' font-size='22' font-family='Arial'>🏥</text></svg>">
   <style>
+    /* ── Fundo azul claro para toda a página, independente do tema do sistema ── */
+    html body,
+    html body.hps-admin-mode { background: #d9eaf8; }
+    @media (prefers-color-scheme: dark) { html body { background: #d9eaf8; } }
+    :root[data-theme="dark"]  body { background: #d9eaf8; }
+    :root[data-theme="light"] body { background: #d9eaf8; }
+
     .ac-wrap  { max-width: 780px; margin: 0 auto; padding: 0 16px 64px; }
 
     /* ── Cards de seção ── */
-    .ac-card  {
-      background: #fff;
-      border: 1.5px solid var(--cinza-borda,#e5e7eb);
+    .ac-card {
+      background: #eef5fb;
+      border: 1.5px solid #b8d4eb;
       border-radius: 12px;
       margin-bottom: 16px;
       overflow: hidden;
@@ -29,23 +36,23 @@
     .ac-f { display: flex; flex-direction: column; gap: 4px; }
     .ac-f label {
       font-size: 11px; font-weight: 700;
-      color: var(--cinza-texto,#6b7280);
+      color: #3a628e;
       text-transform: uppercase; letter-spacing: .05em;
     }
     .ac-f input, .ac-f select, .ac-f textarea {
       padding: 9px 12px;
-      border: 1.5px solid var(--cinza-borda,#e5e7eb); border-radius: 8px;
+      border: 1.5px solid #b8d4eb; border-radius: 8px;
       font-size: 14px; font-family: inherit;
-      background: #fff; color: var(--texto-escuro,#111827);
+      background: #f5faff; color: #0c1e35;
       transition: border-color .2s, box-shadow .2s;
     }
     .ac-f input:focus, .ac-f select:focus, .ac-f textarea:focus {
       outline: none;
       border-color: var(--azul,#1D71B8);
-      box-shadow: 0 0 0 3px rgba(29,113,184,.12);
+      box-shadow: 0 0 0 3px rgba(29,113,184,.14);
     }
     .ac-f textarea { resize: vertical; min-height: 66px; }
-    .ac-f .hint { font-size: 11px; color: var(--cinza-texto,#6b7280); }
+    .ac-f .hint { font-size: 11px; color: #5a82aa; }
 
     /* ── Grids ── */
     .ac-g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
@@ -56,20 +63,20 @@
     .ac-radios { display: flex; flex-wrap: wrap; gap: 7px; }
     .ac-radios label {
       display: flex; align-items: center; gap: 6px;
-      padding: 7px 13px; border: 1.5px solid var(--cinza-borda,#e5e7eb);
+      padding: 7px 13px; border: 1.5px solid #b8d4eb;
       border-radius: 8px; font-size: 14px; font-weight: 400;
       text-transform: none; letter-spacing: normal; cursor: pointer;
-      color: var(--texto-escuro,#111827); transition: border-color .15s, background .15s;
-      user-select: none;
+      color: #0c1e35; transition: border-color .15s, background .15s;
+      user-select: none; background: #f5faff;
     }
     .ac-radios input { accent-color: var(--azul,#1D71B8); }
     .ac-radios label:has(input:checked) {
       border-color: var(--azul,#1D71B8);
-      background: rgba(29,113,184,.07);
+      background: rgba(29,113,184,.10);
     }
     .ac-chk { display: flex; align-items: center; gap: 9px; }
     .ac-chk input { width: 18px; height: 18px; accent-color: var(--azul,#1D71B8); cursor: pointer; flex-shrink: 0; }
-    .ac-chk span  { font-size: 14px; font-weight: 600; cursor: pointer; }
+    .ac-chk span  { font-size: 14px; font-weight: 600; cursor: pointer; color: #0c1e35; }
 
     /* ── Sub-campo condicional ── */
     .ac-sub { display: none; }
@@ -85,28 +92,34 @@
     .btn-gerar:hover { background: #155d96; }
     .btn-gerar:disabled { opacity: .6; cursor: not-allowed; }
     .btn-limpar {
-      padding: 12px 20px; background: none; color: var(--cinza-texto,#6b7280);
-      border: 1.5px solid var(--cinza-borda,#e5e7eb); border-radius: 8px;
+      padding: 12px 20px; background: none; color: #3a628e;
+      border: 1.5px solid #b8d4eb; border-radius: 8px;
       font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
     }
-    .btn-limpar:hover { border-color: #aaa; }
+    .btn-limpar:hover { border-color: #6ba3cc; }
 
-    .ac-req { color: #ef4444; margin-left: 1px; }
+    .ac-req { color: #dc2626; margin-left: 1px; }
     .ac-info {
-      background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px;
-      padding: 11px 16px; font-size: 13px; color: #1e40af; margin-bottom: 16px;
+      background: #dbeeff; border: 1px solid #93c5e8; border-radius: 10px;
+      padding: 11px 16px; font-size: 13px; color: #1a4e82; margin-bottom: 16px;
     }
 
+    /* Forçar fundo claro mesmo no dark mode do sistema/site */
     @media (prefers-color-scheme: dark) {
-      .ac-card { background: #1e2028; border-color: #2d3145; }
-      .ac-f input, .ac-f select, .ac-f textarea { background: #2a2d3e; border-color: #3a3d55; color: #e8eaf6; }
-      .ac-radios label { border-color: #3a3d55; color: #e8eaf6; }
+      .ac-card { background: #eef5fb; border-color: #b8d4eb; }
+      .ac-f input, .ac-f select, .ac-f textarea { background: #f5faff; border-color: #b8d4eb; color: #0c1e35; }
+      .ac-f label { color: #3a628e; }
+      .ac-radios label { background: #f5faff; border-color: #b8d4eb; color: #0c1e35; }
+      .ac-chk span { color: #0c1e35; }
     }
-    :root[data-theme="dark"]  .ac-card { background: #1e2028; border-color: #2d3145; }
-    :root[data-theme="dark"]  .ac-f input,
-    :root[data-theme="dark"]  .ac-f select,
-    :root[data-theme="dark"]  .ac-f textarea { background: #2a2d3e; border-color: #3a3d55; color: #e8eaf6; }
-    :root[data-theme="light"] .ac-card { background: #fff; }
+    :root[data-theme="dark"] .ac-card { background: #eef5fb; border-color: #b8d4eb; }
+    :root[data-theme="dark"] .ac-f input,
+    :root[data-theme="dark"] .ac-f select,
+    :root[data-theme="dark"] .ac-f textarea { background: #f5faff; border-color: #b8d4eb; color: #0c1e35; }
+    :root[data-theme="dark"] .ac-f label   { color: #3a628e; }
+    :root[data-theme="dark"] .ac-radios label { background: #f5faff; border-color: #b8d4eb; color: #0c1e35; }
+    :root[data-theme="dark"] .ac-chk span { color: #0c1e35; }
+    :root[data-theme="light"] .ac-card { background: #eef5fb; }
   </style>
 </head>
 <body>
