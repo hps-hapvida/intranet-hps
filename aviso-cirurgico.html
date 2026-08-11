@@ -742,23 +742,30 @@
     /* ── Notificação ntfy.sh ── */
     try {
       const emitidoEm = now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-      await fetch('https://ntfy.sh/hps-cc-avisos-xyz', {
+      const ntfyResp = await fetch('https://ntfy.sh/hps-cc-avisos-xyz', {
         method: 'POST',
         headers: {
-          'Title': '🏥 Aviso Cirúrgico Gerado',
+          'Title': 'Aviso Cirurgico - HPS',
           'Priority': 'high',
           'Tags': 'hospital,scissors'
         },
         body: [
-          `👤 Paciente: ${pac}`,
-          `💳 Convênio: ${conv}`,
-          `🔪 Procedimento: ${proc}`,
-          `👨‍⚕️ Médico: ${medico}`,
-          `📅 Data: ${data} às ${hora}`,
-          `⏱️ Emitido às ${emitidoEm}`
+          `Paciente: ${pac}`,
+          `Convenio: ${conv}`,
+          `Procedimento: ${proc}`,
+          `Medico: ${medico}`,
+          `Data: ${data} as ${hora}`,
+          `Emitido as ${emitidoEm}`
         ].join('\n')
       });
-    } catch (_) { /* falha silenciosa — PDF já foi gerado */ }
+      if (!ntfyResp.ok) {
+        console.warn('ntfy status:', ntfyResp.status);
+        alert(`PDF gerado com sucesso!\n\nAtenção: a notificação push não pôde ser enviada (status ${ntfyResp.status}). Verifique a conexão ou o tópico no app ntfy.`);
+      }
+    } catch (err) {
+      console.error('ntfy erro:', err);
+      alert('PDF gerado com sucesso!\n\nAtenção: não foi possível enviar a notificação push. Verifique sua conexão com a internet.');
+    }
 
     btn.disabled = false; btn.textContent = '📄 Gerar PDF';
   }
