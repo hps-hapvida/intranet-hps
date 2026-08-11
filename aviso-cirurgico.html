@@ -745,11 +745,11 @@
       const ntfyResp = await fetch('https://ntfy.sh/hps-cc-avisos-xyz', {
         method: 'POST',
         headers: {
-          'Title': 'Aviso Cirurgico - HPS',
           'Priority': 'high',
           'Tags': 'hospital,scissors'
         },
         body: [
+          `Aviso Cirurgico - HPS`,
           `Paciente: ${pac}`,
           `Convenio: ${conv}`,
           `Procedimento: ${proc}`,
