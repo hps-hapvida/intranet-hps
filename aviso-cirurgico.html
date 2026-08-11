@@ -739,6 +739,27 @@
     const dataPdf = (data||'').replace(/\//g,'');
     doc.save(`aviso-cirurgico_${nomePac}_${dataPdf}.pdf`);
 
+    /* ── Notificação ntfy.sh ── */
+    try {
+      const emitidoEm = now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+      await fetch('https://ntfy.sh/hps-cc-avisos-xyz', {
+        method: 'POST',
+        headers: {
+          'Title': '🏥 Aviso Cirúrgico Gerado',
+          'Priority': 'high',
+          'Tags': 'hospital,scissors'
+        },
+        body: [
+          `👤 Paciente: ${pac}`,
+          `🔪 Procedimento: ${proc}`,
+          `👨‍⚕️ Médico: ${medico}`,
+          `📅 Data: ${data} às ${hora}`,
+          `🏥 Sala: ${sala}`,
+          `⏱️ Emitido às ${emitidoEm}`
+        ].join('\n')
+      });
+    } catch (_) { /* falha silenciosa — PDF já foi gerado */ }
+
     btn.disabled = false; btn.textContent = '📄 Gerar PDF';
   }
   </script>
