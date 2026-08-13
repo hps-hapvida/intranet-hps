@@ -53,7 +53,7 @@ img { max-width: 100%; display: block; }
 .site-header {
   background:
     linear-gradient(to right, rgba(10,40,80,.85) 0%, rgba(29,113,184,.78) 100%),
-    url('img/hospital-fachada.jpg') center 35% / cover no-repeat;
+    url('../img/hospital-fachada.jpg') center 35% / cover no-repeat;
   color: var(--branco);
   padding: 0;
   box-shadow: 0 2px 12px rgba(0,0,0,.30);
