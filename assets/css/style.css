@@ -1203,3 +1203,180 @@ body.hps-admin-mode .site-header { top: 44px !important; }
   flex-shrink: 0;
   border: none; border-radius: 0; padding: 0; background: none; box-shadow: none;
 }
+
+/* ================================================
+   Visor de PDF (modal tela cheia)
+   ================================================ */
+#pdf-viewer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.72);
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  animation: fadeInOverlay .18s ease;
+}
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+#pdf-viewer-modal {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 32px 96px rgba(0,0,0,.5);
+  width: min(1020px, 96vw);
+  height: 94vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUpModal .2s ease;
+}
+@keyframes slideUpModal {
+  from { transform: translateY(24px); opacity: .7; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+#pdf-viewer-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--azul, #1539AA);
+  color: #fff;
+  flex-shrink: 0;
+}
+#pdf-viewer-title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.pdf-vbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 13px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  font-family: inherit;
+  background: rgba(255,255,255,.18);
+  color: #fff;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.pdf-vbtn:hover { background: rgba(255,255,255,.30); color: #fff; }
+.pdf-vbtn.close-btn {
+  width: 32px; height: 32px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 17px;
+  background: rgba(255,255,255,.14);
+}
+.pdf-vbtn.close-btn:hover { background: rgba(255,255,255,.28); }
+#pdf-iframe {
+  flex: 1;
+  border: none;
+  width: 100%;
+  background: #525659;
+}
+@media (max-width: 600px) {
+  #pdf-viewer-modal { width: 100vw; height: 100dvh; border-radius: 0; }
+  .pdf-vbtn span { display: none; }
+  .pdf-vbtn { padding: 6px 8px; }
+}
+
+/* ================================================
+   Editor de Documentos (upload + URL)
+   ================================================ */
+.dm-source-toggle {
+  display: flex;
+  gap: 6px;
+  margin-top: 2px;
+}
+.dm-tab {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1.5px solid var(--cinza-borda, #e0e4ea);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cinza-texto, #6b7280);
+  font-family: inherit;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.dm-tab.active {
+  background: var(--azul, #1539AA);
+  border-color: var(--azul, #1539AA);
+  color: #fff;
+}
+.dm-tab:not(.active):hover {
+  border-color: var(--azul, #1539AA);
+  color: var(--azul, #1539AA);
+}
+.dm-progress-bar {
+  height: 7px;
+  background: #e8ecf2;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 8px 0 4px;
+}
+#dm-progress-fill {
+  height: 100%;
+  background: var(--azul, #1539AA);
+  border-radius: 8px;
+  transition: width .35s ease;
+  width: 0;
+}
+.dm-current-file {
+  font-size: 12px;
+  color: var(--cinza-texto, #6b7280);
+  margin: 6px 0 0;
+  line-height: 1.4;
+}
+
+/* Botão de documento na lista (parece link, age como botão) */
+.doc-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--texto-escuro, #111827);
+  border-radius: 8px;
+  transition: background .12s, color .12s;
+  font-family: inherit;
+}
+.doc-link-btn:hover {
+  background: var(--azul-claro, #dbeafe);
+  color: var(--azul, #1539AA);
+}
+.doc-link-btn .link-arrow { margin-left: auto; color: var(--azul, #1539AA); flex-shrink: 0; }
+.doc-link-disabled {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--cinza-texto, #9ca3af);
+}
+

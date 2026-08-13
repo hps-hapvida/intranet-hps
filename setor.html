@@ -412,42 +412,190 @@
     card.style.display = '';
     const admin = isAdminUser();
     container.innerHTML = cachedDocuments.length
-      ? cachedDocuments.map(d => `
-          <li class="link-item">
-            <a href="${escAttr(d.url)}" ${d.url!=='#'?'target="_blank"':''}>
-              <span class="link-icon">${esc(d.icon)}</span>${esc(d.label)}<span class="link-arrow">→</span>
-            </a>
+      ? cachedDocuments.map(d => {
+          const hasUrl = d.url && d.url !== '#';
+          const mainEl = hasUrl
+            ? `<button class="doc-link-btn" onclick="openPdfViewer('${escAttr(d.url)}','${escAttr(d.label)}')">
+                 <span class="link-icon">${esc(d.icon)}</span>
+                 <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.label)}</span>
+                 <span class="link-arrow">→</span>
+               </button>`
+            : `<span class="doc-link-disabled">
+                 <span class="link-icon">${esc(d.icon)}</span>${esc(d.label)}
+               </span>`;
+          return `<li class="link-item">
+            ${mainEl}
             ${admin ? `<div class="item-admin-btns">
               <button onclick="editDocument('${escAttr(d.id)}')" title="Editar">✏️</button>
               <button onclick="deleteDocument('${escAttr(d.id)}')" title="Excluir">🗑</button>
             </div>` : ''}
-          </li>`).join('')
+          </li>`;
+        }).join('')
       : `<li class="empty-admin">Nenhum documento ainda.</li>`;
   }
 
   window.editDocument = function(id) { const d=cachedDocuments.find(x=>x.id===id); if(d) openDocumentEditor(d); };
+
   window.deleteDocument = async function(id) {
     if (!confirm('Excluir este documento?')) return;
-    try { await Documents.remove(id); await loadDocuments(); } catch(e) { alert('Erro: '+e.message); }
+    try {
+      const doc = cachedDocuments.find(x => x.id === id);
+      if (doc?.storage_path) {
+        try { await Documents.deleteFile(doc.storage_path); } catch(_) {}
+      }
+      await Documents.remove(id);
+      await loadDocuments();
+    } catch(e) { alert('Erro: ' + e.message); }
   };
-  window.openDocumentEditor = function(doc=null) {
+
+  window.openDocumentEditor = function(doc = null) {
     const isEdit = !!doc;
-    openEditor({
-      title: isEdit ? 'Editar Documento' : 'Novo Documento', saveLabel: isEdit ? 'Salvar' : 'Adicionar',
-      fields: [
-        { id:'ed-label', label:'Nome *',        type:'text',   value: doc?.label, placeholder:'Ex: POP Triagem Manchester' },
-        { id:'ed-url',   label:'URL / Link',    type:'text',   value: doc?.url==='#'?'':doc?.url, placeholder:'https://...' },
-        { id:'ed-icon',  label:'Ícone (emoji)', type:'text',   value: doc?.icon||'📄', placeholder:'📄' },
-        { id:'ed-order', label:'Ordem',         type:'number', value: doc?.sort_order??0 },
-      ],
-      async onSave(v) {
-        if (!v['ed-label'].trim()) throw new Error('Nome obrigatório');
-        const fields = { label:v['ed-label'].trim(), url:v['ed-url'].trim()||'#', icon:v['ed-icon'].trim()||'📄', sort_order:parseInt(v['ed-order'])||0 };
-        if (isEdit) await Documents.update(doc.id, fields); else await Documents.create(currentSector.id, fields);
+    const mid = 'hps-doc-modal';
+    document.getElementById(mid)?.remove();
+
+    const hasStorage    = !!doc?.storage_path;
+    const hasExternalUrl = !hasStorage && !!doc?.url && doc.url !== '#';
+    const initTab = hasExternalUrl ? 'url' : 'file';
+
+    const el = document.createElement('div');
+    el.className = 'hps-modal-overlay';
+    el.id = mid;
+    el.innerHTML = `
+      <div class="hps-modal">
+        <div class="hps-modal-header">
+          <h3>${isEdit ? 'Editar Documento' : 'Novo Documento'}</h3>
+          <button class="hps-modal-close" data-close="${mid}">✕</button>
+        </div>
+        <div class="hps-modal-body">
+          <label>Nome *<input id="dm-label" type="text" value="${escAttr(doc?.label||'')}" placeholder="Ex: POP Triagem Manchester"></label>
+          <label>Ícone (emoji)<input id="dm-icon" type="text" value="${escAttr(doc?.icon||'📄')}" placeholder="📄" style="max-width:80px"></label>
+          <label>Ordem<input id="dm-order" type="number" value="${escAttr(String(doc?.sort_order??0))}"></label>
+          <div class="dm-source-toggle">
+            <button type="button" class="dm-tab${initTab==='file'?' active':''}" id="dm-tab-file">📁 Upload PDF</button>
+            <button type="button" class="dm-tab${initTab==='url'?' active':''}" id="dm-tab-url">🔗 URL externa</button>
+          </div>
+          <div id="dm-file-section"${initTab!=='file'?' style="display:none"':''}>
+            <label style="margin-bottom:0">Arquivo PDF
+              <input id="dm-file" type="file" accept=".pdf,application/pdf" style="padding:6px 0;cursor:pointer">
+            </label>
+            ${hasStorage ? `<p class="dm-current-file">📄 Arquivo atual: <em>${esc(doc.label)}</em> — faça novo upload para substituir</p>` : ''}
+            <div id="dm-upload-progress" style="display:none;margin-top:8px">
+              <div class="dm-progress-bar"><div id="dm-progress-fill"></div></div>
+              <span id="dm-progress-text"></span>
+            </div>
+          </div>
+          <div id="dm-url-section"${initTab!=='url'?' style="display:none"':''}>
+            <label>URL / Link<input id="dm-url" type="text" value="${escAttr(hasExternalUrl?doc.url||'':'')}" placeholder="https://..."></label>
+          </div>
+        </div>
+        <div class="hps-modal-footer">
+          <button class="hps-bar-btn" data-close="${mid}">Cancelar</button>
+          <button class="hps-bar-btn primary" id="dm-save-btn">${isEdit ? 'Salvar' : 'Adicionar'}</button>
+        </div>
+      </div>`;
+
+    document.body.appendChild(el);
+
+    function activeTab() {
+      return document.getElementById('dm-file-section').style.display !== 'none' ? 'file' : 'url';
+    }
+    function switchTab(tab) {
+      const fs=document.getElementById('dm-file-section'), us=document.getElementById('dm-url-section');
+      const tf=document.getElementById('dm-tab-file'),    tu=document.getElementById('dm-tab-url');
+      if (tab==='file') { fs.style.display=''; us.style.display='none'; tf.classList.add('active'); tu.classList.remove('active'); }
+      else              { fs.style.display='none'; us.style.display=''; tf.classList.remove('active'); tu.classList.add('active'); }
+    }
+    document.getElementById('dm-tab-file').addEventListener('click', () => switchTab('file'));
+    document.getElementById('dm-tab-url').addEventListener('click',  () => switchTab('url'));
+
+    const closeModal = () => { el.classList.remove('open'); setTimeout(() => el.remove(), 280); };
+    el.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
+    el.addEventListener('click', e => { if (e.target === el) closeModal(); });
+    requestAnimationFrame(() => { el.classList.add('open'); document.getElementById('dm-label').focus(); });
+
+    document.getElementById('dm-save-btn').addEventListener('click', async function() {
+      const btn   = this;
+      const label = document.getElementById('dm-label').value.trim();
+      const icon  = document.getElementById('dm-icon').value.trim() || '📄';
+      const order = parseInt(document.getElementById('dm-order').value) || 0;
+      if (!label) { alert('Nome é obrigatório'); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Salvando…';
+
+      try {
+        let url = doc?.url || '#';
+        let storagePath = doc?.storage_path || null;
+        const tab = activeTab();
+
+        if (tab === 'file') {
+          const file = document.getElementById('dm-file').files[0];
+          if (file) {
+            if (doc?.storage_path) { try { await Documents.deleteFile(doc.storage_path); } catch(_) {} }
+            const progressDiv  = document.getElementById('dm-upload-progress');
+            const progressFill = document.getElementById('dm-progress-fill');
+            const progressText = document.getElementById('dm-progress-text');
+            progressDiv.style.display = '';
+            progressFill.style.width = '20%';
+            progressText.textContent = 'Enviando arquivo…';
+            btn.textContent = 'Enviando…';
+
+            storagePath = await Documents.upload(currentSector.id, file);
+            progressFill.style.width = '90%';
+            url = Documents.getPublicUrl(storagePath);
+            progressFill.style.width = '100%';
+            progressText.textContent = 'Arquivo enviado! ✓';
+          }
+          /* se não selecionou arquivo novo mas já tem storage_path, mantém */
+        } else {
+          url = document.getElementById('dm-url').value.trim() || '#';
+          if (doc?.storage_path) { try { await Documents.deleteFile(doc.storage_path); } catch(_) {} }
+          storagePath = null;
+        }
+
+        const fields = { label, url, icon, sort_order: order, storage_path: storagePath };
+        if (isEdit) await Documents.update(doc.id, fields);
+        else        await Documents.create(currentSector.id, fields);
+        closeModal();
         await loadDocuments();
+      } catch(e) {
+        alert('Erro: ' + e.message);
+        btn.disabled = false;
+        btn.textContent = isEdit ? 'Salvar' : 'Adicionar';
       }
     });
   };
+
+  /* ===== VISOR DE PDF ===== */
+  let _pdfUrl = '';
+
+  window.openPdfViewer = function(url, label) {
+    _pdfUrl = url;
+    document.getElementById('pdf-viewer-title').textContent = label;
+    document.getElementById('pdf-iframe').src = url;
+    const dlBtn = document.getElementById('pdf-download-btn');
+    dlBtn.href = url;
+    dlBtn.setAttribute('download', label.replace(/[/\\?%*:|"<>]/g,'_') + '.pdf');
+    document.getElementById('pdf-viewer-overlay').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closePdfViewer = function() {
+    document.getElementById('pdf-viewer-overlay').style.display = 'none';
+    document.getElementById('pdf-iframe').src = '';
+    document.body.style.overflow = '';
+    _pdfUrl = '';
+  };
+
+  window.printCurrentPdf = function() {
+    if (_pdfUrl) window.open(_pdfUrl, '_blank');
+  };
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('pdf-viewer-overlay').style.display !== 'none') {
+      closePdfViewer();
+    }
+  });
 
   /* ===== FAQs ===== */
   async function loadFAQs() {
@@ -645,5 +793,25 @@
     if (currentSector) await reloadAll();
   });
   </script>
+
+  <!-- ===== VISOR DE PDF ===== -->
+  <div id="pdf-viewer-overlay" style="display:none" role="dialog" aria-modal="true" aria-label="Visualizador de documento">
+    <div id="pdf-viewer-modal">
+      <div id="pdf-viewer-header">
+        <span id="pdf-viewer-title"></span>
+        <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+          <a id="pdf-download-btn" class="pdf-vbtn" href="#" download>
+            ⬇ <span>Salvar</span>
+          </a>
+          <button class="pdf-vbtn" onclick="printCurrentPdf()">
+            🖨 <span>Imprimir</span>
+          </button>
+          <button class="pdf-vbtn close-btn" onclick="closePdfViewer()" aria-label="Fechar">✕</button>
+        </div>
+      </div>
+      <iframe id="pdf-iframe" src="" title="Visualizador de documento" allowfullscreen></iframe>
+    </div>
+  </div>
+
 </body>
 </html>

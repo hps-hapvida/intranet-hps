@@ -222,6 +222,29 @@ const Documents = {
   async remove(id) {
     const { error } = await db.from('documents').delete().eq('id', id);
     if (error) throw error;
+  },
+
+  /* Storage helpers */
+  async upload(sectorId, file) {
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const path = `${sectorId}/${Date.now()}-${safeName}`;
+    const { error } = await db.storage.from('documentos').upload(path, file, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: file.type || 'application/pdf'
+    });
+    if (error) throw error;
+    return path;
+  },
+
+  getPublicUrl(path) {
+    const { data } = db.storage.from('documentos').getPublicUrl(path);
+    return data.publicUrl;
+  },
+
+  async deleteFile(path) {
+    const { error } = await db.storage.from('documentos').remove([path]);
+    if (error) throw error;
   }
 };
 
