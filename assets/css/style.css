@@ -164,10 +164,12 @@ img { max-width: 100%; display: block; }
 /* ---------- Hero ---------- */
 .hero {
   background:
-    linear-gradient(to bottom, rgba(10,40,80,.72) 0%, rgba(29,113,184,.65) 100%),
-    url('../img/hospital-fachada.jpg') center 40% / cover no-repeat;
+    linear-gradient(to bottom, rgba(10,40,80,.70) 0%, rgba(29,113,184,.60) 100%),
+    url('../img/hospital-fachada.jpg') center center / contain no-repeat;
+  background-color: #0a2850;
   color: var(--branco);
   padding: 56px 24px;
+  min-height: 420px;
   position: relative;
   overflow: hidden;
 }
