@@ -34,6 +34,49 @@
     }
     .faq-admin-btns button:hover { background: var(--cinza-fundo,#f3f4f6); }
 
+    /* ---- Rich Text Editor (FAQ) ---- */
+    .rte-toolbar {
+      display: flex; align-items: center; gap: 2px; flex-wrap: wrap;
+      padding: 6px 8px;
+      background: var(--fundo-card,#f9fafb);
+      border: 1.5px solid var(--borda,#d1d5db);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+    }
+    .rte-btn {
+      min-width: 30px; height: 28px;
+      border: 1px solid transparent; border-radius: 5px;
+      background: none; cursor: pointer;
+      font-size: 13px; padding: 0 5px;
+      color: var(--texto,#111827);
+      display: inline-flex; align-items: center; justify-content: center;
+      line-height: 1; font-family: inherit;
+    }
+    .rte-btn:hover  { background: rgba(0,0,0,.07); }
+    .rte-btn.active { background: rgba(21,57,170,.12); color: var(--azul,#1539AA); border-color: var(--azul-medio,#1D71B8); }
+    .rte-sep { display: inline-block; width: 1px; height: 20px; background: var(--borda,#d1d5db); margin: 0 3px; flex-shrink: 0; }
+    .rte-editor {
+      min-height: 130px; max-height: 300px; overflow-y: auto;
+      padding: 10px 12px;
+      border: 1.5px solid var(--borda,#d1d5db);
+      border-radius: 0 0 8px 8px;
+      background: #fff; color: var(--texto,#111827);
+      font-size: 14px; line-height: 1.65;
+      outline: none; cursor: text;
+    }
+    .rte-editor:focus { border-color: var(--azul-medio,#1D71B8); }
+    .rte-editor p, .rte-editor div { margin: 1px 0; min-height: 1.2em; }
+    .rte-editor ul { list-style: disc;    padding-left: 1.4em; margin: 2px 0; }
+    .rte-editor ol { list-style: decimal; padding-left: 1.4em; margin: 2px 0; }
+
+    /* Resposta FAQ renderizada como HTML */
+    .faq-answer b, .faq-answer strong { font-weight: 700; }
+    .faq-answer em, .faq-answer i { font-style: italic; }
+    .faq-answer u { text-decoration: underline; }
+    .faq-answer p, .faq-answer div { margin: 2px 0; min-height: 1em; }
+    .faq-answer ul { list-style: disc;    padding-left: 1.4em; margin: 3px 0; }
+    .faq-answer ol { list-style: decimal; padding-left: 1.4em; margin: 3px 0; }
+
     .btn-add-sm {
       font-size: 12px; font-weight: 600; padding: 4px 10px;
       background: var(--azul,#1D71B8); color: #fff;
@@ -611,7 +654,7 @@
       ? cachedFaqs.map(f => `
           <div class="faq-item">
             <div class="faq-question">${esc(f.question)}<span class="faq-chevron">▼</span></div>
-            <div class="faq-answer">${esc(f.answer)}</div>
+            <div class="faq-answer">${f.answer}</div>
             ${admin ? `<div class="faq-admin-btns">
               <button onclick="editFaq('${escAttr(f.id)}')" title="Editar">✏️</button>
               <button onclick="deleteFaq('${escAttr(f.id)}')" title="Excluir">🗑</button>
@@ -626,21 +669,118 @@
     if (!confirm('Excluir esta pergunta?')) return;
     try { await FAQs.remove(id); await loadFAQs(); } catch(e) { alert('Erro: '+e.message); }
   };
-  window.openFaqEditor = function(faq=null) {
+  window.openFaqEditor = function(faq = null) {
     const isEdit = !!faq;
-    openEditor({
-      title: isEdit ? 'Editar Pergunta' : 'Nova Pergunta', saveLabel: isEdit ? 'Salvar' : 'Adicionar',
-      fields: [
-        { id:'ef2-question', label:'Pergunta *',  type:'text',     value: faq?.question, placeholder:'Ex: Como solicitar leito de UTI?' },
-        { id:'ef2-answer',   label:'Resposta *',  type:'textarea', value: faq?.answer, rows:4 },
-        { id:'ef2-order',    label:'Ordem',       type:'number',   value: faq?.sort_order??0 },
-      ],
-      async onSave(v) {
-        if (!v['ef2-question'].trim()) throw new Error('Pergunta obrigatória');
-        if (!v['ef2-answer'].trim())   throw new Error('Resposta obrigatória');
-        const fields = { question:v['ef2-question'].trim(), answer:v['ef2-answer'].trim(), sort_order:parseInt(v['ef2-order'])||0 };
-        if (isEdit) await FAQs.update(faq.id, fields); else await FAQs.create(currentSector.id, fields);
+    const mid = 'hps-faq-rte-modal';
+    document.getElementById(mid)?.remove();
+
+    // Ícones SVG para alinhamento
+    const IC = {
+      left:    `<svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><rect x="0" y="0" width="14" height="2"/><rect x="0" y="5" width="9"  height="2"/><rect x="0" y="10" width="14" height="2"/></svg>`,
+      center:  `<svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><rect x="0" y="0" width="14" height="2"/><rect x="3" y="5" width="8"  height="2"/><rect x="0" y="10" width="14" height="2"/></svg>`,
+      right:   `<svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><rect x="0" y="0" width="14" height="2"/><rect x="5" y="5" width="9"  height="2"/><rect x="0" y="10" width="14" height="2"/></svg>`,
+      justify: `<svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><rect x="0" y="0" width="14" height="2"/><rect x="0" y="5" width="14" height="2"/><rect x="0" y="10" width="14" height="2"/></svg>`,
+    };
+
+    const el = document.createElement('div');
+    el.className = 'hps-modal-overlay';
+    el.id = mid;
+    el.innerHTML = `
+      <div class="hps-modal" style="width:min(700px,95vw)">
+        <div class="hps-modal-header">
+          <h3>${isEdit ? 'Editar Pergunta' : 'Nova Pergunta'}</h3>
+          <button class="hps-modal-close" data-close="${mid}">✕</button>
+        </div>
+        <div class="hps-modal-body">
+          <label>Pergunta *
+            <input id="fq-question" type="text" value="${escAttr(faq?.question||'')}"
+                   placeholder="Ex: Como solicitar leito de UTI?">
+          </label>
+          <label style="display:block;margin-bottom:4px;font-size:13px;font-weight:500;color:var(--cinza-texto,#6b7280)">Resposta *</label>
+          <div class="rte-toolbar" id="fq-toolbar">
+            <button type="button" class="rte-btn" data-cmd="bold"                title="Negrito (Ctrl+B)"><b>N</b></button>
+            <button type="button" class="rte-btn" data-cmd="italic"              title="Itálico (Ctrl+I)"><em>I</em></button>
+            <button type="button" class="rte-btn" data-cmd="underline"           title="Sublinhado (Ctrl+U)"><u>S</u></button>
+            <span class="rte-sep"></span>
+            <button type="button" class="rte-btn" data-cmd="justifyLeft"         title="Alinhar à esquerda">${IC.left}</button>
+            <button type="button" class="rte-btn" data-cmd="justifyCenter"       title="Centralizar">${IC.center}</button>
+            <button type="button" class="rte-btn" data-cmd="justifyRight"        title="Alinhar à direita">${IC.right}</button>
+            <button type="button" class="rte-btn" data-cmd="justifyFull"         title="Justificar">${IC.justify}</button>
+            <span class="rte-sep"></span>
+            <button type="button" class="rte-btn" data-cmd="insertUnorderedList" title="Lista com marcadores">• Lista</button>
+            <button type="button" class="rte-btn" data-cmd="insertOrderedList"   title="Lista numerada">1. Lista</button>
+          </div>
+          <div id="fq-answer" class="rte-editor" contenteditable="true">${faq?.answer||''}</div>
+          <label style="margin-top:12px">Ordem
+            <input id="fq-order" type="number" value="${faq?.sort_order??0}">
+          </label>
+        </div>
+        <div class="hps-modal-footer">
+          <button class="hps-bar-btn" data-close="${mid}">Cancelar</button>
+          <button class="hps-bar-btn primary" id="fq-save">${isEdit ? 'Salvar' : 'Adicionar'}</button>
+        </div>
+      </div>`;
+
+    document.body.appendChild(el);
+
+    const editor  = el.querySelector('#fq-answer');
+    const toolbar = el.querySelector('#fq-toolbar');
+
+    try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch(_) {}
+
+    // Clique nos botões da barra sem tirar o foco do editor
+    toolbar.addEventListener('mousedown', e => {
+      const btn = e.target.closest('[data-cmd]');
+      if (!btn) return;
+      e.preventDefault();
+      document.execCommand(btn.dataset.cmd, false, null);
+      editor.focus();
+      syncActive();
+    });
+
+    // Estado ativo dos botões reflete a seleção atual
+    function syncActive() {
+      toolbar.querySelectorAll('[data-cmd]').forEach(btn => {
+        try { btn.classList.toggle('active', document.queryCommandState(btn.dataset.cmd)); } catch(_) {}
+      });
+    }
+    editor.addEventListener('keyup',   syncActive);
+    editor.addEventListener('mouseup', syncActive);
+    const onSel = () => syncActive();
+    document.addEventListener('selectionchange', onSel);
+
+    const closeModal = () => {
+      document.removeEventListener('selectionchange', onSel);
+      el.classList.remove('open');
+      setTimeout(() => el.remove(), 280);
+    };
+    el.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
+    el.addEventListener('click', e => { if (e.target === el) closeModal(); });
+    requestAnimationFrame(() => { el.classList.add('open'); el.querySelector('#fq-question').focus(); });
+
+    document.getElementById('fq-save').addEventListener('click', async function() {
+      const question = document.getElementById('fq-question').value.trim();
+      // Limpa artefatos de editor vazio (<p><br></p>, etc.)
+      const answer = editor.innerHTML
+        .replace(/<(p|div)><br\s*\/?><\/(p|div)>/gi, '')
+        .trim();
+      const order = parseInt(document.getElementById('fq-order').value) || 0;
+
+      if (!question)      { alert('Pergunta obrigatória'); return; }
+      if (!answer)        { alert('Resposta obrigatória'); return; }
+
+      this.disabled = true;
+      this.textContent = 'Salvando…';
+      try {
+        const fields = { question, answer, sort_order: order };
+        if (isEdit) await FAQs.update(faq.id, fields);
+        else        await FAQs.create(currentSector.id, fields);
+        closeModal();
         await loadFAQs();
+      } catch(e) {
+        alert('Erro: ' + e.message);
+        this.disabled = false;
+        this.textContent = isEdit ? 'Salvar' : 'Adicionar';
       }
     });
   };
