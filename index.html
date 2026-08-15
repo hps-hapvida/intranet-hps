@@ -258,6 +258,7 @@
   <script src="assets/js/config.js"></script>
   <script src="assets/js/db.js"></script>
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/emoji-picker.js"></script>
   <script>
   let currentUser = null;
   function isAdminUser() { return !!currentUser && currentUser.app_metadata?.role === 'admin'; }
@@ -269,6 +270,8 @@
     const mid = 'hps-generic-modal';
     document.getElementById(mid)?.remove();
     function buildField(f) {
+      if (f.type === 'emoji')
+        return window.buildEmojiField(f.id, f.value, f.label);
       if (f.type === 'textarea')
         return `<label>${esc(f.label)}<textarea id="${f.id}" rows="${f.rows||3}" placeholder="${escAttr(f.placeholder||'')}">${esc(f.value||'')}</textarea></label>`;
       if (f.type === 'select') {
@@ -289,10 +292,11 @@
         </div>
       </div>`;
     document.body.appendChild(el);
+    window.initEmojiPickers?.(el);
     const closeModal = () => { el.classList.remove('open'); setTimeout(() => el.remove(), 280); };
     el.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
     el.addEventListener('click', e => { if (e.target === el) closeModal(); });
-    requestAnimationFrame(() => { el.classList.add('open'); el.querySelector('input,textarea,select')?.focus(); });
+    requestAnimationFrame(() => { el.classList.add('open'); el.querySelector('input:not([type=hidden]),textarea,select')?.focus(); });
     document.getElementById('ge-save-btn').addEventListener('click', async function() {
       this.disabled = true; this.textContent = 'Salvando…';
       const values = {};
@@ -317,7 +321,7 @@
       fields: [
         { id:'es-name',  label:'Nome *',          type:'text',    value: sector?.name,        placeholder:'Ex: Pronto Socorro' },
         { id:'es-slug',  label:'Slug (URL) *',    type:'text',    value: sector?.slug,        placeholder:'Ex: pronto-socorro' },
-        { id:'es-emoji', label:'Emoji',           type:'text',    value: sector?.emoji||'🏥', placeholder:'🏥' },
+        { id:'es-emoji', label:'Emoji',           type:'emoji',   value: sector?.emoji||'🏥' },
         { id:'es-color', label:'Cor',             type:'select',  value: sector?.color||'blue', options: SECTOR_COLORS },
         { id:'es-desc',  label:'Descrição',       type:'textarea',value: sector?.description, rows:2 },
         { id:'es-order', label:'Ordem',           type:'number',  value: sector?.sort_order??99 },

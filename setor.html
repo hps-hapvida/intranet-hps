@@ -297,6 +297,7 @@
   <script src="assets/js/db.js"></script>
   <script src="assets/js/main.js"></script>
   <script src="assets/js/admin.js"></script>
+  <script src="assets/js/emoji-picker.js"></script>
   <script>
   const MONTHS = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
 
@@ -431,7 +432,7 @@
       fields: [
         { id:'el-label',    label:'Nome *',        type:'text',     value: link?.label, placeholder:'Nome do link' },
         { id:'el-url',      label:'URL',           type:'text',     value: link?.url==='#'?'':link?.url, placeholder:'https://...' },
-        { id:'el-icon',     label:'Ícone (emoji)', type:'text',     value: link?.icon||'🔗', placeholder:'🔗' },
+        { id:'el-icon',     label:'Ícone (emoji)', type:'emoji',    value: link?.icon||'🔗' },
         { id:'el-featured', label:'Link destaque (azul)', type:'checkbox', value: link?.is_featured },
         { id:'el-order',    label:'Ordem',         type:'number',   value: link?.sort_order??0 },
       ],
@@ -511,7 +512,7 @@
         </div>
         <div class="hps-modal-body">
           <label>Nome *<input id="dm-label" type="text" value="${escAttr(doc?.label||'')}" placeholder="Ex: POP Triagem Manchester"></label>
-          <label>Ícone (emoji)<input id="dm-icon" type="text" value="${escAttr(doc?.icon||'📄')}" placeholder="📄" style="max-width:80px"></label>
+          ${buildEmojiField('dm-icon', doc?.icon||'📄', 'Ícone (emoji)')}
           <label>Ordem<input id="dm-order" type="number" value="${escAttr(String(doc?.sort_order??0))}"></label>
           <div class="dm-source-toggle">
             <button type="button" class="dm-tab${initTab==='file'?' active':''}" id="dm-tab-file">📁 Upload PDF</button>
@@ -538,6 +539,7 @@
       </div>`;
 
     document.body.appendChild(el);
+    window.initEmojiPickers?.(el);
 
     function activeTab() {
       return document.getElementById('dm-file-section').style.display !== 'none' ? 'file' : 'url';
@@ -821,6 +823,8 @@
     document.getElementById(mid)?.remove();
 
     function buildField(f) {
+      if (f.type === 'emoji')
+        return window.buildEmojiField(f.id, f.value, f.label);
       if (f.type === 'textarea')
         return `<label>${esc(f.label)}<textarea id="${f.id}" rows="${f.rows||3}" placeholder="${escAttr(f.placeholder||'')}">${esc(f.value||'')}</textarea></label>`;
       if (f.type === 'checkbox')
@@ -847,10 +851,11 @@
       </div>`;
 
     document.body.appendChild(el);
+    window.initEmojiPickers?.(el);
     const closeModal = () => { el.classList.remove('open'); setTimeout(() => el.remove(), 280); };
     el.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
     el.addEventListener('click', e => { if (e.target === el) closeModal(); });
-    requestAnimationFrame(() => { el.classList.add('open'); el.querySelector('input,textarea,select')?.focus(); });
+    requestAnimationFrame(() => { el.classList.add('open'); el.querySelector('input:not([type=hidden]),textarea,select')?.focus(); });
 
     document.getElementById('ge-save-btn').addEventListener('click', async function() {
       this.disabled = true; this.textContent = 'Salvando…';
