@@ -76,6 +76,19 @@
     .faq-answer p, .faq-answer div { margin: 2px 0; min-height: 1em; }
     .faq-answer ul { list-style: disc;    padding-left: 1.4em; margin: 3px 0; }
     .faq-answer ol { list-style: decimal; padding-left: 1.4em; margin: 3px 0; }
+    .faq-answer a  { color: var(--azul-medio,#1D71B8); text-decoration: underline; }
+
+    /* Corpo do aviso renderizado como HTML */
+    .modal-body b, .modal-body strong { font-weight: 700; }
+    .modal-body em, .modal-body i { font-style: italic; }
+    .modal-body u { text-decoration: underline; }
+    .modal-body p, .modal-body div { margin: 3px 0; min-height: 1em; }
+    .modal-body ul { list-style: disc;    padding-left: 1.4em; margin: 4px 0; }
+    .modal-body ol { list-style: decimal; padding-left: 1.4em; margin: 4px 0; }
+    .modal-body a  { color: var(--azul-medio,#1D71B8); text-decoration: underline; }
+
+    /* Grid de campos no editor de aviso */
+    .ep-fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
     .btn-add-sm {
       font-size: 12px; font-weight: 600; padding: 4px 10px;
@@ -370,28 +383,163 @@
   window.openPostEditor = function(post = null) {
     const isEdit = !!post;
     const dateStr = post?.post_date || new Date().toISOString().split('T')[0];
-    openEditor({
-      title: isEdit ? 'Editar Aviso' : 'Novo Aviso',
-      saveLabel: isEdit ? 'Salvar alterações' : 'Publicar aviso',
-      fields: [
-        { id:'ef-title',   label:'Título *',  type:'text',     value: post?.title,   placeholder:'Título do aviso' },
-        { id:'ef-summary', label:'Resumo',    type:'textarea', value: post?.summary, placeholder:'Texto curto', rows:2 },
-        { id:'ef-body',    label:'Corpo (aceita HTML)', type:'textarea', value: post?.body, rows:5 },
-        { id:'ef-tag',     label:'Categoria', type:'select',   value: post?.tag || 'aviso',
-          options:[{v:'urgente',l:'🔴 Urgente'},{v:'aviso',l:'🔵 Aviso'},{v:'info',l:'⚪ Info'},{v:'tutorial',l:'🟢 Treinamento'}] },
-        { id:'ef-date',    label:'Data',      type:'date',     value: dateStr },
-        { id:'ef-author',  label:'Autor / Setor', type:'text', value: post?.author,  placeholder:'Ex: Coordenação PS' },
-      ],
-      async onSave(v) {
-        if (!v['ef-title'].trim()) throw new Error('Título obrigatório');
-        const fields = {
-          title: v['ef-title'].trim(), summary: v['ef-summary'].trim(),
-          body: v['ef-body'].trim(), tag: v['ef-tag'],
-          post_date: v['ef-date'], author: v['ef-author'].trim(),
-        };
+    const mid = 'hps-post-rte-modal';
+    document.getElementById(mid)?.remove();
+
+    const IC = {
+      left:    `<svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><rect x="0" y="0" width="14" height="2"/><rect x="0" y="5" width="9"  height="2"/><rect x="0" y="10" width="14" height="2"/></svg>`,
+      center:  `<svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><rect x="0" y="0" width="14" height="2"/><rect x="3" y="5" width="8"  height="2"/><rect x="0" y="10" width="14" height="2"/></svg>`,
+      right:   `<svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><rect x="0" y="0" width="14" height="2"/><rect x="5" y="5" width="9"  height="2"/><rect x="0" y="10" width="14" height="2"/></svg>`,
+      justify: `<svg width="14" height="12" viewBox="0 0 14 12" fill="currentColor"><rect x="0" y="0" width="14" height="2"/><rect x="0" y="5" width="14" height="2"/><rect x="0" y="10" width="14" height="2"/></svg>`,
+      link:    `<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M5.5 9.5a3.5 3.5 0 0 0 4.95 0l1.42-1.41a3.5 3.5 0 0 0-4.95-4.95L5.5 4.56"/><path d="M8.5 4.5a3.5 3.5 0 0 0-4.95 0L2.13 5.91a3.5 3.5 0 0 0 4.95 4.95L8.5 9.44"/></svg>`,
+    };
+
+    const tagOpts = [
+      {v:'urgente',l:'🔴 Urgente'},{v:'aviso',l:'🔵 Aviso'},
+      {v:'info',l:'⚪ Info'},{v:'tutorial',l:'🟢 Treinamento'},
+    ];
+
+    const el = document.createElement('div');
+    el.className = 'hps-modal-overlay';
+    el.id = mid;
+    el.innerHTML = `
+      <div class="hps-modal" style="width:min(720px,95vw)">
+        <div class="hps-modal-header">
+          <h3>${isEdit ? 'Editar Aviso' : 'Novo Aviso'}</h3>
+          <button class="hps-modal-close" data-close="${mid}">✕</button>
+        </div>
+        <div class="hps-modal-body">
+          <label>Título *
+            <input id="ep-title" type="text" value="${escAttr(post?.title||'')}" placeholder="Título do aviso">
+          </label>
+          <label>Resumo <small style="color:var(--cinza-texto,#6b7280);font-weight:400">— texto curto exibido no card</small>
+            <textarea id="ep-summary" rows="2" placeholder="Breve descrição do aviso">${esc(post?.summary||'')}</textarea>
+          </label>
+          <label style="display:block;margin-bottom:4px;font-size:13px;font-weight:500;color:var(--cinza-texto,#6b7280)">Corpo do aviso</label>
+          <div class="rte-toolbar" id="ep-toolbar">
+            <button type="button" class="rte-btn" data-cmd="bold"                title="Negrito (Ctrl+B)"><b>N</b></button>
+            <button type="button" class="rte-btn" data-cmd="italic"              title="Itálico (Ctrl+I)"><em>I</em></button>
+            <button type="button" class="rte-btn" data-cmd="underline"           title="Sublinhado (Ctrl+U)"><u>S</u></button>
+            <span class="rte-sep"></span>
+            <button type="button" class="rte-btn" data-cmd="justifyLeft"         title="Alinhar à esquerda">${IC.left}</button>
+            <button type="button" class="rte-btn" data-cmd="justifyCenter"       title="Centralizar">${IC.center}</button>
+            <button type="button" class="rte-btn" data-cmd="justifyRight"        title="Alinhar à direita">${IC.right}</button>
+            <button type="button" class="rte-btn" data-cmd="justifyFull"         title="Justificar">${IC.justify}</button>
+            <span class="rte-sep"></span>
+            <button type="button" class="rte-btn" data-cmd="insertUnorderedList" title="Lista com marcadores">• Lista</button>
+            <button type="button" class="rte-btn" data-cmd="insertOrderedList"   title="Lista numerada">1. Lista</button>
+            <span class="rte-sep"></span>
+            <button type="button" class="rte-btn" id="ep-link-btn"               title="Inserir/editar link (selecione o texto primeiro)">${IC.link} Link</button>
+          </div>
+          <div id="ep-body" class="rte-editor" contenteditable="true">${post?.body||''}</div>
+          <div class="ep-fields-row">
+            <label>Categoria
+              <select id="ep-tag">
+                ${tagOpts.map(o => `<option value="${o.v}"${(post?.tag||'aviso')===o.v?' selected':''}>${esc(o.l)}</option>`).join('')}
+              </select>
+            </label>
+            <label>Data
+              <input id="ep-date" type="date" value="${escAttr(dateStr)}">
+            </label>
+          </div>
+          <label>Autor / Setor
+            <input id="ep-author" type="text" value="${escAttr(post?.author||'')}" placeholder="Ex: Coordenação PS">
+          </label>
+        </div>
+        <div class="hps-modal-footer">
+          <button class="hps-bar-btn" data-close="${mid}">Cancelar</button>
+          <button class="hps-bar-btn primary" id="ep-save">${isEdit ? 'Salvar alterações' : 'Publicar aviso'}</button>
+        </div>
+      </div>`;
+
+    document.body.appendChild(el);
+
+    const editor  = el.querySelector('#ep-body');
+    const toolbar = el.querySelector('#ep-toolbar');
+
+    try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch(_) {}
+
+    toolbar.addEventListener('mousedown', e => {
+      const btn = e.target.closest('[data-cmd]');
+      if (!btn) return;
+      e.preventDefault();
+      document.execCommand(btn.dataset.cmd, false, null);
+      editor.focus();
+      syncActive();
+    });
+
+    el.querySelector('#ep-link-btn').addEventListener('mousedown', e => {
+      e.preventDefault();
+      insertLink(editor);
+    });
+
+    function insertLink(ed) {
+      const sel    = window.getSelection();
+      const linkEl = sel?.anchorNode?.parentElement?.closest('a');
+      if (linkEl) {
+        const url = prompt('Editar URL (deixe vazio para remover o link):', linkEl.href);
+        if (url === null) { ed.focus(); return; }
+        if (url.trim()) linkEl.href = url.trim(); else document.execCommand('unlink');
+        ed.focus(); syncActive(); return;
+      }
+      const hasText = sel && !sel.isCollapsed && sel.toString().trim();
+      if (hasText) {
+        const url = prompt('URL do link:');
+        if (!url?.trim()) { ed.focus(); return; }
+        document.execCommand('createLink', false, url.trim());
+        const a = window.getSelection()?.anchorNode?.parentElement?.closest('a');
+        if (a) { a.target = '_blank'; a.rel = 'noopener'; }
+      } else {
+        const txt = prompt('Texto do link:');
+        if (!txt?.trim()) { ed.focus(); return; }
+        const url = prompt('URL do link:');
+        if (!url?.trim()) { ed.focus(); return; }
+        document.execCommand('insertHTML', false,
+          `<a href="${url.trim()}" target="_blank" rel="noopener">${txt.trim()}</a>`);
+      }
+      ed.focus(); syncActive();
+    }
+
+    function syncActive() {
+      toolbar.querySelectorAll('[data-cmd]').forEach(btn => {
+        try { btn.classList.toggle('active', document.queryCommandState(btn.dataset.cmd)); } catch(_) {}
+      });
+      const onLink = !!window.getSelection()?.anchorNode?.parentElement?.closest('a');
+      el.querySelector('#ep-link-btn')?.classList.toggle('active', onLink);
+    }
+    editor.addEventListener('keyup',   syncActive);
+    editor.addEventListener('mouseup', syncActive);
+    const onSel = () => syncActive();
+    document.addEventListener('selectionchange', onSel);
+
+    const closeModal = () => {
+      document.removeEventListener('selectionchange', onSel);
+      el.classList.remove('open');
+      setTimeout(() => el.remove(), 280);
+    };
+    el.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeModal));
+    el.addEventListener('click', e => { if (e.target === el) closeModal(); });
+    requestAnimationFrame(() => { el.classList.add('open'); el.querySelector('#ep-title').focus(); });
+
+    el.querySelector('#ep-save').addEventListener('click', async function() {
+      const title   = el.querySelector('#ep-title').value.trim();
+      const summary = el.querySelector('#ep-summary').value.trim();
+      const body    = editor.innerHTML.replace(/<(p|div)><br\s*\/?><\/(p|div)>/gi, '').trim();
+      const tag     = el.querySelector('#ep-tag').value;
+      const date    = el.querySelector('#ep-date').value;
+      const author  = el.querySelector('#ep-author').value.trim();
+      if (!title) { alert('Título obrigatório'); return; }
+      this.disabled = true; this.textContent = 'Salvando…';
+      try {
+        const fields = { title, summary, body, tag, post_date: date, author };
         if (isEdit) await Posts.update(post.id, fields);
         else        await Posts.create(currentSector.id, fields);
+        closeModal();
         await loadPosts();
+      } catch(e) {
+        alert('Erro: ' + e.message);
+        this.disabled = false;
+        this.textContent = isEdit ? 'Salvar alterações' : 'Publicar aviso';
       }
     });
   };
@@ -711,6 +859,8 @@
             <span class="rte-sep"></span>
             <button type="button" class="rte-btn" data-cmd="insertUnorderedList" title="Lista com marcadores">• Lista</button>
             <button type="button" class="rte-btn" data-cmd="insertOrderedList"   title="Lista numerada">1. Lista</button>
+            <span class="rte-sep"></span>
+            <button type="button" class="rte-btn" id="fq-link-btn" title="Inserir/editar link (selecione o texto primeiro)"><svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M5.5 9.5a3.5 3.5 0 0 0 4.95 0l1.42-1.41a3.5 3.5 0 0 0-4.95-4.95L5.5 4.56"/><path d="M8.5 4.5a3.5 3.5 0 0 0-4.95 0L2.13 5.91a3.5 3.5 0 0 0 4.95 4.95L8.5 9.44"/></svg> Link</button>
           </div>
           <div id="fq-answer" class="rte-editor" contenteditable="true">${faq?.answer||''}</div>
           <label style="margin-top:12px">Ordem
@@ -740,11 +890,41 @@
       syncActive();
     });
 
+    el.querySelector('#fq-link-btn').addEventListener('mousedown', e => {
+      e.preventDefault();
+      const sel    = window.getSelection();
+      const linkEl = sel?.anchorNode?.parentElement?.closest('a');
+      if (linkEl) {
+        const url = prompt('Editar URL (deixe vazio para remover o link):', linkEl.href);
+        if (url === null) { editor.focus(); return; }
+        if (url.trim()) linkEl.href = url.trim(); else document.execCommand('unlink');
+        editor.focus(); syncActive(); return;
+      }
+      const hasText = sel && !sel.isCollapsed && sel.toString().trim();
+      if (hasText) {
+        const url = prompt('URL do link:');
+        if (!url?.trim()) { editor.focus(); return; }
+        document.execCommand('createLink', false, url.trim());
+        const a = window.getSelection()?.anchorNode?.parentElement?.closest('a');
+        if (a) { a.target = '_blank'; a.rel = 'noopener'; }
+      } else {
+        const txt = prompt('Texto do link:');
+        if (!txt?.trim()) { editor.focus(); return; }
+        const url = prompt('URL do link:');
+        if (!url?.trim()) { editor.focus(); return; }
+        document.execCommand('insertHTML', false,
+          `<a href="${url.trim()}" target="_blank" rel="noopener">${txt.trim()}</a>`);
+      }
+      editor.focus(); syncActive();
+    });
+
     // Estado ativo dos botões reflete a seleção atual
     function syncActive() {
       toolbar.querySelectorAll('[data-cmd]').forEach(btn => {
         try { btn.classList.toggle('active', document.queryCommandState(btn.dataset.cmd)); } catch(_) {}
       });
+      const onLink = !!window.getSelection()?.anchorNode?.parentElement?.closest('a');
+      el.querySelector('#fq-link-btn')?.classList.toggle('active', onLink);
     }
     editor.addEventListener('keyup',   syncActive);
     editor.addEventListener('mouseup', syncActive);
